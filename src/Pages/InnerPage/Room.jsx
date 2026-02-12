@@ -494,7 +494,7 @@ const Room = () => {
                   <span className="mx-2">|</span>
                   <span>Night</span>
                 </div>
-               <Link to={"/room_details"}>
+                <Link to={"/room_details"}>
                   <button className="flex items-center justify-center text-[15px] leading-[38px] bg-khaki  absolute bottom-0 -left-40 px-6 py-1 text-white  group-hover:left-0 transition-all duration-300">
                     View Details{" "}
                     <BsArrowRight className="w-4 h-4 ml-2  text-white" />{" "}
@@ -858,14 +858,14 @@ const Room = () => {
                         cancelButtonColor: "#d33",
                         confirmButtonText: "Yes, complete!",
                         color: "#fff",
-                        background: "#c19d68",
+                        background: "#7d4d00", //"#c19d68"
                       }).then((result) => {
                         if (result.isConfirmed) {
                           Swal.fire({
                             title: "Congratulation!",
                             text: "Your Appointment Added Successful!",
                             icon: "success",
-                            background: "#c19d68",
+                            background: "#7d4d00", //"#c19d68"
                             color: "#fff",
                             confirmButtonColor: "#008000",
                           });

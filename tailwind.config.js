@@ -11,7 +11,8 @@ export default {
         slateGray: "",
         gray: "#616161",
         lightGray: "#acacac",
-        khaki: "#c19d68",
+        // khaki: "#c19d68",
+        khaki: "#7d4d00",
         whiteSmoke: "#f8f6f3",
       },
       fontFamily: {

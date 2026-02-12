@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import Footer from "../Shared/Footer/Footer";
+// import Footer from "../Shared/Footer/Footer";
 import Navbar from "../Shared/Navbar/Navbar";
 import ScrollToTop from "../ScrollToTop";
 import GoToTop from "../Shared/GoToTop";
@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import HelmetChanger from "../Shared/Helmet/Helmet";
+import Footer2 from "../Shared/Footer/Footer2";
 
 const Main = () => {
   useEffect(() => {
@@ -23,7 +24,7 @@ const Main = () => {
       <div>
         <Outlet />
       </div>
-      <Footer />
+      <Footer2 />
     </>
   );
 };

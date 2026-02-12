@@ -25,7 +25,8 @@
 }
 
 .dot1.active {
-  background: #c19d68;
+  /* background: #c19d68; */
+  background: #7d4d00;
 }
 
 /* .control {

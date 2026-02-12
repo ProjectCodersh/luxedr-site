@@ -12,19 +12,20 @@ const Footer2 = () => {
             data-aos-duration="1000"
           >
             <img
-              src="/images/home-2/footer-logo.png"
+              src="/images/extra/site-logo-1.png"
               className="dark:hidden"
               alt=""
             />
             <img
-              src="/images/home-2/dark_footer_logo.png"
+              src="/images/extra/site-logo-1.png"
               className="hidden dark:block"
               alt=""
             />
             <p className="text-sm xl:text-base leading-[26px] font-Lora font-normal text-gray dark:text-lightGray mt-6 lg:mt-[35px] 2xl:w-[345px]">
-              Show beauty your location, showse design your rooms, present the
-              facities an todays features of your hotel and offer tos recove
-              method to book a room.
+              Luxury travel and private hospitality experiences in the Dominican
+              Republic. From private chefs and curated stays to full-service
+              travel planning, we craft unforgettable, personalized escapes
+              designed around you.
             </p>
           </div>
           {/* contact info */}
@@ -38,14 +39,14 @@ const Footer2 = () => {
             </h4>
             <ul className="">
               <li className="text-gray dark:text-lightGray font-normal font-Lora text-sm xl:text-base mb-[15px] hover:text-khaki transition-all duration-300">
-                support@example.com
+                info.luxedr@gmail.com
               </li>
-              <li className="text-gray dark:text-lightGray font-normal font-Lora text-sm xl:text-base mb-[15px] hover:text-khaki transition-all duration-300">
+              {/* <li className="text-gray dark:text-lightGray font-normal font-Lora text-sm xl:text-base mb-[15px] hover:text-khaki transition-all duration-300">
                 Bangladesh Mahanagari <br />
                 Dhaka
-              </li>
+              </li> */}
               <li className="text-gray dark:text-lightGray font-normal font-Lora text-sm xl:text-base mb-[15px] hover:text-khaki transition-all duration-300">
-                1-800-123-4567
+                +1 (829) 424-7560
               </li>
             </ul>
           </div>
@@ -60,16 +61,10 @@ const Footer2 = () => {
             </h4>
             <ul className="">
               <li className="text-gray dark:text-lightGray font-normal font-Lora text-sm xl:text-base mb-[15px] hover:text-khaki transition-all duration-300">
-                <Link to="#"> Our Location</Link>
+                <Link to="#"> Experiences Page</Link>
               </li>
               <li className="text-gray dark:text-lightGray font-normal font-Lora text-sm xl:text-base mb-[15px] hover:text-khaki transition-all duration-300">
-                <Link to="#"> Career</Link>
-              </li>
-              <li className="text-gray dark:text-lightGray font-normal font-Lora text-sm xl:text-base mb-[15px] hover:text-khaki transition-all duration-300">
-                <Link to="#"> Customer support</Link>
-              </li>
-              <li className="text-gray dark:text-lightGray font-normal font-Lora text-sm xl:text-base mb-[15px] hover:text-khaki transition-all duration-300">
-                <Link to="#"> About Us</Link>
+                <Link to="#"> Contact Page</Link>
               </li>
             </ul>
           </div>
@@ -80,7 +75,7 @@ const Footer2 = () => {
             data-aos-duration="1000"
           >
             <h4 className="text-lg leading-[46px] font-Garamond font-bold text pb-4 md:pb-5  text-lightBlack dark:text-white">
-              INSTAGRAM
+              FOLLOW US
             </h4>
             <div className="grid grid-cols-3 gap-[10px] py-[5px] 2xl:w-[300px] content-center ">
               <img src="/images/home-2/gallery-1.jpg" alt="" />
@@ -101,14 +96,14 @@ const Footer2 = () => {
             className="text-sm xl:text-base text-gray dark:text-lightGray
            font-Lora font-normal"
           >
-            {` © ${new Date().getFullYear()} Royella. All Rights Reserved.`}
+            {` © ${new Date().getFullYear()} LUXEDR Resort. All Rights Reserved.`}
           </p>
-          <p
+          {/* <p
             className="text-sm xl:text-base text-gray dark:text-lightGray
            font-Lora font-normal"
           >
             Developed by: Dream-IT Team
-          </p>
+          </p> */}
         </div>
       </div>
     </footer>

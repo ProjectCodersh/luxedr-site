@@ -12,14 +12,14 @@ const Make_Appointment = () => {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, complete!",
       color: "#fff",
-      background: "#c19d68",
+      background: "#7d4d00", //"#c19d68",
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire({
           title: "Congratulation!",
           text: "Your Appointment Added Successful!",
           icon: "success",
-          background: "#c19d68",
+          background: "#7d4d00", //"#c19d68",
           color: "#fff",
           confirmButtonColor: "#008000",
         });

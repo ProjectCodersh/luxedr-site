@@ -16,7 +16,8 @@
 
 /* added select highlight color */
 ::selection {
-  background-color: #c19d68;
+  /* background-color: #c19d68; */
+  background-color: #7d4d00;
   color: white;
 }
 /* container code */
@@ -34,7 +35,7 @@
 }
 /* hover animation */
 .hover-animBg {
-  @apply relative z-[1] after:absolute after:inset-0 after:content-[""] after:bg-[#C19C67] after:rounded-full after:w-full after:h-full after:scale-0 after:transition-all after:duration-500 after:z-[-1] after:top-0 after:left-0 hover:after:scale-[1];
+  @apply relative z-[1] after:absolute after:inset-0 after:content-[""] after:bg-[#7d4d00] after:rounded-full after:w-full after:h-full after:scale-0 after:transition-all after:duration-500 after:z-[-1] after:top-0 after:left-0 hover:after:scale-[1];
 }
 /* primary button */
 .btn-primary {
@@ -45,7 +46,7 @@
 }
 
 .btn-secondary {
-  @apply border border-white w-[145px] sm:w-[155px] lg:w-[170px] 2xl:w-[185px] 3xl:w-[192px] h-[48px] lg:h-[52px] 2xl:h-[60px] relative before:w-8 before:h-[1px] before:bg-white before:absolute before:left-0  md:before:top-[60px] lg:before:top-[65px] 2xl:before:top-[70px] text-white uppercase text-sm lg:text-base font-medium font-Garamond hover-animBg after:rounded-none hover:border-khaki hover:before:bg-khaki transition-all duration-300;
+  @apply border border-white w-[145px] sm:w-[155px] lg:w-[170px] 2xl:w-[185px] 3xl:w-[192px] h-[48px] lg:h-[52px] 2xl:h-[60px] relative before:w-8 before:h-[1px] before:bg-white before:absolute before:left-0  md:before:top-[60px] lg:before:top-[65px] 2xl:before:top-[70px] text-white uppercase text-sm lg:text-base font-medium font-Garamond hover-animBg after:rounded-none hover:border-[#7d4d00] hover:before:bg-[#7d4d00] transition-all duration-300;
 }
 
 .btn-items {
@@ -94,7 +95,8 @@ select option:checked {
 }
 option:checked,
 option:hover {
-  background-color: #c19d68;
+  /* background-color: #c19d68; */
+  background-color: #7d4d00;
   /* padding: 6px; */
   color: white;
 }

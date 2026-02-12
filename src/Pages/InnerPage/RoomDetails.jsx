@@ -18,7 +18,7 @@ const RoomDetails = () => {
 
   const prevBtn = () => {
     setImageIndex(
-      (prevIndex) => (prevIndex - 1 + images.length) % images.length
+      (prevIndex) => (prevIndex - 1 + images.length) % images.length,
     );
   };
   const nextBtn = () => {
@@ -36,14 +36,14 @@ const RoomDetails = () => {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, i want!",
       color: "#fff",
-      background: "#c19d68",
+      background: "#7d4d00", //"#c19d68"
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire({
           title: "Congratulation!",
           text: "Booking Successful!",
           icon: "success",
-          background: "#c19d68",
+          background: "#7d4d00", //"#c19d68"
           color: "#fff",
           confirmButtonColor: "#008000",
         });
@@ -277,7 +277,7 @@ const RoomDetails = () => {
                               .toDateString()
                               .slice(4)
                           : new Date(
-                              new Date().setDate(new Date().getDate() + 3)
+                              new Date().setDate(new Date().getDate() + 3),
                             )
                               .toDateString()
                               .slice(4)}

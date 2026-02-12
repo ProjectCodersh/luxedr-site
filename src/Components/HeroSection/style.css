@@ -24,7 +24,8 @@
 }
 .swiper-button-prev:hover,
 .swiper-button-next:hover {
-  background: #c19d68;
+  /* background: #c19d68; */
+  background: #7d4d00;
   border: none;
 }
 
@@ -36,7 +37,8 @@
 }
 
 .swiper-pagination-bullet-active {
-  color: #c19d68;
+  /* color: #c19d68; */
+  color: #7d4d00;
 }
 
 /* slider responsive */
