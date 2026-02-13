@@ -65,9 +65,8 @@ const Apartments = () => {
               <div className="pt-[10px] text-sm sm:text-base">{room} Room</div>
               <div className="absolute pt-5  z-20">
                 <div
-                  className={`shadow-2xl ${
-                    open ? "" : "hidden"
-                  } rounded-sm bg-white text-black w-60 text-left dark:bg-normalBlack dark:text-white transition-all duration-500 text-sm py-4 `}
+                  className={`shadow-2xl ${open ? "" : "hidden"
+                    } rounded-sm bg-white text-black w-60 text-left dark:bg-normalBlack dark:text-white transition-all duration-500 text-sm py-4 `}
                 >
                   <div className="py-2 px-5 group cursor-pointer">
                     <li className="flex items-center justify-between">
@@ -112,9 +111,8 @@ const Apartments = () => {
               </div>
               <div className="absolute pt-5  z-20 ml-[-120px] sm:ml-0">
                 <div
-                  className={`shadow-2xl ${
-                    guestOpen ? "" : "hidden"
-                  } rounded-sm bg-white text-black w-60 text-left dark:bg-normalBlack dark:text-white transition-all duration-500 text-sm py-4 left`}
+                  className={`shadow-2xl ${guestOpen ? "" : "hidden"
+                    } rounded-sm bg-white text-black w-60 text-left dark:bg-normalBlack dark:text-white transition-all duration-500 text-sm py-4 left`}
                 >
                   <div className="py-2 px-5 group cursor-pointer">
                     <li className="flex items-center justify-between">
@@ -180,7 +178,7 @@ const Apartments = () => {
                 <h1 className="text-5xl sm:text-[80px] leading-[26px] font-semibold">
                   500+
                 </h1>
-                <p className="text-base sm:text-lg leading-[26px] mt-1 sm:mt-4">
+                <p className="text-base sm:text-lg leading-[26px] mt-1 sm:mt-4 md:mt-8">
                   Happy Guests Hosted
                 </p>
               </div>

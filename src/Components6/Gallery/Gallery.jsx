@@ -37,7 +37,7 @@ const Gallery = () => {
           <p className="text-base leading-7 md:leading-10 lg:leading-[40px] 3xl:leading-[66px] text-khaki mb-1 md:mb-0 font-normal font-Lora">
             Photos Gallery
           </p>
-          <h1 className="text-2xl md:text-3xl 2xl:text-[38px] leading-[38px] lg:leading-[44px] text-lightBlack dark:text-white mt-2 md:mt-[10px]  mb-[12px] font-bold">
+          <h1 className="text-2xl md:text-3xl 2xl:text-[38px] leading-[38px] lg:leading-[44px] text-lightBlack dark:text-white mt-2 md:mt-[10px]  mb-[12px] font-bold font-Garamond">
             Unforgettable Moments, Shared by Our Guests
           </h1>
           <Link to={"/pricing"}>

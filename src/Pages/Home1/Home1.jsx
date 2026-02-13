@@ -11,6 +11,7 @@ import Best_Offer from "../../Components6/Best_Offer/Best_Offer";
 import Apartments from "../../Components6/Apartments/Apartments";
 import Testimonials from "../../Components6/Testimonials/Testimonials";
 import Gallery from "../../Components6/Gallery/Gallery";
+import Brand from "../../Components6/Brand/Brand";
 
 const Home1 = () => {
   return (
@@ -20,6 +21,7 @@ const Home1 = () => {
       <Best_Offer />
       <Testimonials />
       <Gallery />
+      <Brand />
       {/* <Rooms />
       <HotelAndResort />
       <HotelAndFacilities />
