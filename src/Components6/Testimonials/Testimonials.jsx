@@ -96,7 +96,7 @@ const Testimonial = () => {
 
               <div className="flex items-center space-x-6 ">
                 <img
-                  src="/images/home-1/testi-author.png"
+                  src="/images/extra/author-1.webp"
                   className="w-[65px] h-[65px]"
                   alt=""
                 />
@@ -160,7 +160,7 @@ const Testimonial = () => {
 
                 <div className="flex items-center space-x-6 ">
                   <img
-                    src="/images/home-1/testi-author-2.png"
+                    src="/images/extra/author-2.webp"
                     className="w-[65px] h-[65px]"
                     alt=""
                   />
@@ -218,7 +218,7 @@ const Testimonial = () => {
 
                 <div className="flex items-center space-x-6 ">
                   <img
-                    src="/images/home-1/call-do-action-img.png"
+                    src="/images/extra/author-3.webp"
                     className="w-[65px] h-[65px]"
                     alt=""
                   />
@@ -276,7 +276,7 @@ const Testimonial = () => {
 
                 <div className="flex items-center space-x-6 ">
                   <img
-                    src="/images/home-1/testi-author.png"
+                    src="/images/extra/author-5.webp"
                     className="w-[65px] h-[65px]"
                     alt=""
                   />
@@ -333,7 +333,7 @@ const Testimonial = () => {
 
                 <div className="flex items-center space-x-6 ">
                   <img
-                    src="/images/home-1/testi-author.png"
+                    src="/images/extra/author-4.webp"
                     className="w-[65px] h-[65px]"
                     alt=""
                   />
@@ -390,7 +390,7 @@ const Testimonial = () => {
 
                 <div className="flex items-center space-x-6 ">
                   <img
-                    src="/images/home-1/testi-author.png"
+                    src="/images/extra/author-1.webp"
                     className="w-[65px] h-[65px]"
                     alt=""
                   />

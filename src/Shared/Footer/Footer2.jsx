@@ -48,7 +48,7 @@ const Footer2 = () => {
                 <Link to="tel:+18294247560" className="">+1 (829) 424-7560</Link>
               </li>
               <li className="text-gray dark:text-lightGray font-normal font-Lora text-sm xl:text-base mb-[15px] hover:text-khaki transition-all duration-300">
-                <Link to="https://www.google.com/maps?q=Dominican+Republic" className="">Dominican Republic</Link>
+                <Link to="https://maps.app.goo.gl/XZPpWNM8W3X1vCeF6" className="">Dominican Republic</Link>
               </li>
             </ul>
 

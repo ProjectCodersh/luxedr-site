@@ -156,7 +156,7 @@ const Apartments = () => {
               </div>
             </div>
           </div>
-          <Link to="/find_room">
+          <Link to="/packages">
             <button className="w-[142px] h-10 lg:h-[50px] text-[15px] bg-khaki font-Garamond border border-khaki text-white mx-auto col-span-2  md:col-span-1 lg:col-span-1 relative z-10 before:absolute before:top-0 before:right-0 before:-z-10 before:w-0 before:h-full before:bg-lightBlack before:transition-all before:duration-500 hover:before:w-full hover:before:left-0">
               Checkout Now
             </button>
@@ -172,7 +172,7 @@ const Apartments = () => {
             data-aos="fade-up"
             data-aos-duration="1000"
           >
-            <img src="/images/home-5/best-apartment.png" className="" alt="" />
+            <img src="/images/extra/hero-card-1.png" className="" alt="" />
             <div className="w-[120px] h-[85px] sm:w-[195px] sm:h-[145px] bg-khaki grid items-center justify-center text-white font-Garamond absolute left-[28px] bottom-[40%]">
               <div className="text-center">
                 <h1 className="text-5xl sm:text-[80px] leading-[26px] font-semibold">

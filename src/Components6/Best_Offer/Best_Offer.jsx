@@ -1,4 +1,4 @@
-import { LiaDotCircleSolid } from "react-icons/lia";
+// import { LiaDotCircleSolid } from "react-icons/lia";
 import { Link } from "react-router-dom";
 
 const Best_Offer = () => {
@@ -34,7 +34,7 @@ const Best_Offer = () => {
               service, creating stays that feel effortless, indulgent, and
               unforgettable.
             </p>
-
+            {/* 
             <div className="flex items-center mb-5 sm:mb-6 md:mb-7 xl:mb-10 2xl:mb-[50px]">
               <ul className="space-y-1 sm:space-y-2 xl:space-y-3">
                 <li className="flex items-center space-x-[8px]">
@@ -56,7 +56,7 @@ const Best_Offer = () => {
                   </p>
                 </li>
               </ul>
-            </div>
+            </div> */}
             <Link to={"/about"}>
               <button className="btn-primary 3xl:w-[211px]">
                 LUXEDR Story
@@ -70,12 +70,12 @@ const Best_Offer = () => {
             data-aos-duration="1000"
           >
             <img
-              src="/images/home-5/best-offer.png"
+              src="/images/extra/hero-card-2.png"
               className="dark:hidden"
               alt=""
             />
             <img
-              src="/images/home-5/dark-best-offer.png"
+              src="/images/extra/hero-card-2.png"
               className="hidden dark:block"
               alt=""
             />

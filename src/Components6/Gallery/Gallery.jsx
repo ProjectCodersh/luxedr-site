@@ -52,18 +52,18 @@ const Gallery = () => {
           <div ref={sliderRef} className="keen-slider">
             <div className="keen-slider__slide number-slide1">
               <div
-                className="gallery-effect bg-[url('/images/home-4/gallery-1.jpg')] group"
+                className="gallery-effect bg-[url('/images/extra/gallery-image-1.png')] group"
                 data-aos="fade-up"
                 data-aos-duration="1000"
               >
                 <img
-                  src="/images/home-4/gallery-1.jpg"
+                  src="/images/extra/gallery-image-1.png"
                   alt=""
                   className="w-full h-full opacity-0"
                 />
                 <div className="px-[25px] py-10 absolute bottom-[-300px] lg:bottom-[-330px] 3xl:bottom-[-300px] group-hover:bottom-[25%] sm:group-hover:bottom-[20%]  lg:group-hover:bottom-[20%] left-[18px] right-[18px] my-[18px] transition-all z-20 duration-500 scale-50 group-hover:scale-100 text-center">
                   <h3 className="text-2xl md:text-[26px]  leading-5 md:leading-[26px] xl:text-[25px] 2xl:text-3xl 3xl:text-4xl 2xl:leading-[42px] text-white  font-Garamond font-semibold ">
-                    Bed Female Dorm
+                    Gallery 3
                   </h3>
                   <Link to="#">
                     <p className="text-sm sm:text-base leading-[22px] lg:leading-[26px] xl:leading-[38px] font-Lora font-normal text-white mt-2 ">
@@ -75,18 +75,18 @@ const Gallery = () => {
             </div>
             <div className="keen-slider__slide number-slide2">
               <div
-                className="gallery-effect bg-[url('/images/home-4/gallery-2.jpg')] group "
+                className="gallery-effect bg-[url('/images/extra/gallery-image-2.png')] group "
                 data-aos="fade-down"
                 data-aos-duration="1000"
               >
                 <img
-                  src="/images/home-4/gallery-1.jpg"
+                  src="/images/extra/gallery-image-2.png"
                   alt=""
                   className="w-full h-full opacity-0"
                 />
                 <div className="px-[25px] py-10 absolute bottom-[-300px] lg:bottom-[-330px] 3xl:bottom-[-300px] group-hover:bottom-[25%] sm:group-hover:bottom-[20%]  lg:group-hover:bottom-[20%] left-[18px] right-[18px] my-[18px] transition-all z-20 duration-500 scale-50 group-hover:scale-100 text-center">
                   <h3 className="text-2xl md:text-[26px]  leading-5 md:leading-[26px] xl:text-[25px] 2xl:text-3xl 3xl:text-4xl 2xl:leading-[42px] text-white  font-Garamond font-semibold ">
-                    Bed Female Dorm
+                    Gallery 4
                   </h3>
                   <Link to="#">
                     <p className="text-sm sm:text-base leading-[22px] lg:leading-[26px] xl:leading-[38px] font-Lora font-normal text-white mt-2 ">
@@ -98,18 +98,18 @@ const Gallery = () => {
             </div>
             <div className="keen-slider__slide number-slide3">
               <div
-                className="gallery-effect bg-[url('/images/home-4/gallery-3.jpg')] group "
+                className="gallery-effect bg-[url('/images/extra/gallery-image-3.png')] group "
                 data-aos="fade-up"
                 data-aos-duration="1000"
               >
                 <img
-                  src="/images/home-4/gallery-1.jpg"
+                  src="/images/extra/gallery-image-3.png"
                   alt=""
                   className="w-full h-full opacity-0"
                 />
                 <div className="px-[25px] py-10 absolute bottom-[-300px] lg:bottom-[-330px] 3xl:bottom-[-300px] group-hover:bottom-[25%] sm:group-hover:bottom-[20%]  lg:group-hover:bottom-[20%] left-[18px] right-[18px] my-[18px] transition-all z-20 duration-500 scale-50 group-hover:scale-100 text-center">
                   <h3 className="text-2xl md:text-[26px]  leading-5 md:leading-[26px] xl:text-[25px] 2xl:text-3xl 3xl:text-4xl 2xl:leading-[42px] text-white  font-Garamond font-semibold ">
-                    Bed Female Dorm
+                    Gallery 5
                   </h3>
                   <Link to="#">
                     <p className="text-sm sm:text-base leading-[22px] lg:leading-[26px] xl:leading-[38px] font-Lora font-normal text-white mt-2 ">
@@ -121,18 +121,18 @@ const Gallery = () => {
             </div>
             <div className="keen-slider__slide number-slide4">
               <div
-                className="gallery-effect bg-[url('/images/home-4/gallery-5.jpg')] group "
+                className="gallery-effect bg-[url('/images/extra/gallery-image-4.png')] group "
                 data-aos="fade-down"
                 data-aos-duration="1000"
               >
                 <img
-                  src="/images/home-4/gallery-1.jpg"
+                  src="/images/extra/gallery-image-4.png"
                   alt=""
                   className="w-full h-full opacity-0"
                 />
                 <div className="px-[25px] py-10 absolute bottom-[-300px] lg:bottom-[-330px] 3xl:bottom-[-300px] group-hover:bottom-[25%] sm:group-hover:bottom-[20%]  lg:group-hover:bottom-[20%] left-[18px] right-[18px] my-[18px] transition-all z-20 duration-500 scale-50 group-hover:scale-100 text-center">
                   <h3 className="text-2xl md:text-[26px]  leading-5 md:leading-[26px] xl:text-[25px] 2xl:text-3xl 3xl:text-4xl 2xl:leading-[42px] text-white  font-Garamond font-semibold ">
-                    Bed Female Dorm
+                    Gallery 1
                   </h3>
                   <Link to="#">
                     <p className="text-sm sm:text-base leading-[22px] lg:leading-[26px] xl:leading-[38px] font-Lora font-normal text-white mt-2 ">
@@ -144,18 +144,18 @@ const Gallery = () => {
             </div>
             <div className="keen-slider__slide number-slide5">
               <div
-                className="gallery-effect bg-[url('/images/home-4/gallery-5.jpg')] group "
+                className="gallery-effect bg-[url('/images/extra/gallery-image-5.png')] group "
                 data-aos="fade-up"
                 data-aos-duration="1000"
               >
                 <img
-                  src="/images/home-4/gallery-1.jpg"
+                  src="/images/extra/gallery-image-5.png"
                   alt=""
                   className="w-full h-full opacity-0"
                 />
                 <div className="px-[25px] py-10 absolute bottom-[-300px] lg:bottom-[-330px] 3xl:bottom-[-300px] group-hover:bottom-[25%] sm:group-hover:bottom-[20%]  lg:group-hover:bottom-[20%] left-[18px] right-[18px] my-[18px] transition-all z-20 duration-500 scale-50 group-hover:scale-100 text-center">
                   <h3 className="text-2xl md:text-[26px]  leading-5 md:leading-[26px] xl:text-[25px] 2xl:text-3xl 3xl:text-4xl 2xl:leading-[42px] text-white  font-Garamond font-semibold ">
-                    Bed Female Dorm
+                    Gallery 2
                   </h3>
                   <Link to="#">
                     <p className="text-sm sm:text-base leading-[22px] lg:leading-[26px] xl:leading-[38px] font-Lora font-normal text-white mt-2 ">

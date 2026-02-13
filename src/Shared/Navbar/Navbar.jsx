@@ -2,7 +2,8 @@ import { Link, NavLink } from "react-router-dom";
 import useScrollPosition from "./useScrollPosition";
 import { FaBars } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
-import { BiChevronDown, BiSun } from "react-icons/bi";
+// import { BiChevronDown, BiSun } from "react-icons/bi";
+import { BiSun } from "react-icons/bi";
 import { IoMoonSharp } from "react-icons/io5";
 import { useEffect, useState } from "react";
 
@@ -97,9 +98,8 @@ const Navbar = () => {
           </div>
           {/* All navLink are hear with active */}
           <ul
-            className={`${
-              isOpen ? "block" : "hidden"
-            } text-left w-full lg:w-fit  ease-in-out lg:flex space-y-2 lg:space-y-0 lg:text-center space-x-0 lg:space-x-3 xl:space-x-4 2xl:space-x-5 3xl:space-x-[24px] flex flex-col lg:flex-row text-sm text-lightBlack lg:text-white dark:text-white uppercase font-normal bg-white dark:bg-normalBlack lg:bg-transparent dark:lg:bg-transparent py-3 lg:py-0 `}
+            className={`${isOpen ? "block" : "hidden"
+              } text-left w-full lg:w-fit  ease-in-out lg:flex space-y-2 lg:space-y-0 lg:text-center space-x-0 lg:space-x-3 xl:space-x-4 2xl:space-x-5 3xl:space-x-[24px] flex flex-col lg:flex-row text-sm text-lightBlack lg:text-white dark:text-white uppercase font-normal bg-white dark:bg-normalBlack lg:bg-transparent dark:lg:bg-transparent py-3 lg:py-0 `}
           >
             <NavLink
               className={`${({ isActive, isPending }) =>
@@ -176,13 +176,14 @@ const Navbar = () => {
                   : isActive
                     ? "active"
                     : ""} text-lightBlack lg:text-white dark:text-white  lg:border-b-0 px-3 py-2 w-full block transition-all duration-300 group relative `}
-              to="#"
+              to="/experiences"
             >
-              <span className="flex items-center">
+              Experiences
+              {/* <span className="flex items-center">
                 Experiences
                 <BiChevronDown className="ml-1" />
-              </span>
-              <div className="absolute pt-5 lg:pt-8 z-20">
+              </span> */}
+              {/* <div className="absolute pt-5 lg:pt-8 z-20">
                 <ul className="shadow-2xl hidden group-hover:block rounded-sm bg-white text-black w-[200px] text-left dark:bg-normalBlack dark:text-white transition-all duration-500 text-sm py-4 ">
                   <div className=" px-5 group hover:bg-khaki hover:text-white">
                     <li className="hover:ml-3 duration-300  ">
@@ -206,7 +207,7 @@ const Navbar = () => {
                     </li>
                   </div>
                 </ul>
-              </div>
+              </div> */}
             </NavLink>
             {/* Packages */}
             <NavLink
@@ -218,11 +219,12 @@ const Navbar = () => {
                     : ""} text-lightBlack lg:text-white dark:text-white  lg:border-b-0 px-3 py-2 w-full block transition-all duration-300 group relative `}
               to="#"
             >
-              <span className="flex items-center">
+              Packages
+              {/* <span className="flex items-center">
                 Packages
                 <BiChevronDown className="ml-1" />
-              </span>
-              <div className="absolute pt-5 lg:pt-8 z-20">
+              </span> */}
+              {/* <div className="absolute pt-5 lg:pt-8 z-20">
                 <ul className="shadow-2xl hidden group-hover:block rounded-sm bg-white text-black w-[200px] text-left dark:bg-normalBlack dark:text-white transition-all duration-500 text-sm py-4 ">
                   <div className=" px-5 group hover:bg-khaki hover:text-white">
                     <li className="hover:ml-3 duration-300  ">
@@ -239,7 +241,7 @@ const Navbar = () => {
                     </li>
                   </div>
                 </ul>
-              </div>
+              </div> */}
             </NavLink>
 
             {/* <NavLink

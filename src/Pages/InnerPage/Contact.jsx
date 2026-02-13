@@ -1,8 +1,22 @@
 import { MdEmail, MdOutlineShareLocation } from "react-icons/md";
 import BreadCrumb from "../../BreadCrumb/BreadCrumb";
 import { IoIosCall } from "react-icons/io";
+import { Link } from "react-router-dom";
+// import { useState } from 'react';
+
 
 const Contact = () => {
+
+  // const [isOpen, setIsOpen] = useState(false);
+  // const [selected, setSelected] = useState("Select Subject");
+
+  // const options = [
+  //   { label: "Subject One", value: "option1" },
+  //   { label: "Subject Two", value: "option2" },
+  //   { label: "Select Three", value: "option3" },
+  //   { label: "Select Four", value: "option4" },
+  // ];
+
   return (
     <div>
       <BreadCrumb title="Contact " />
@@ -43,7 +57,7 @@ const Contact = () => {
                     Call Us Now
                   </p>
                   <p className="font-Garamond text-lg sm:text-xl md:text-[22px] leading-[26px] text-lightBlack dark:text-white font-medium">
-                    +980 123 (4567) 890
+                    <Link to="tel:+18294247560" className="">+1 (829) 424 - 7560</Link>
                   </p>
                 </div>
               </div>
@@ -61,7 +75,7 @@ const Contact = () => {
                     Send Email
                   </p>
                   <p className="font-Garamond text-lg sm:text-xl md:text-[22px] leading-[26px] text-lightBlack dark:text-white font-medium ">
-                    example@gmail.com
+                    <Link to="mailto:info.luxedr@gmail.com" className="">info.luxedr@gmail.com</Link>
                   </p>
                 </div>
               </div>
@@ -79,8 +93,7 @@ const Contact = () => {
                     Our Locations
                   </p>
                   <p className="font-Garamond text-lg sm:text-xl md:text-[22px] leading-[26px] text-lightBlack dark:text-white font-medium ">
-                    New elephant Road, Dhanmondi <br />
-                    Dhaka - 1212
+                    <Link to="https://maps.app.goo.gl/XZPpWNM8W3X1vCeF6" className="">Dominican Republic</Link>
                   </p>
                 </div>
               </div>
@@ -107,51 +120,34 @@ const Contact = () => {
                     placeholder="Enter E-mail"
                     required
                   />
-                  <select
-                    className="w-full h-12 md:h-13 lg:h-[59px] px-4 border border-gray dark:border-lightGray text-gray dark:text-lightGray outline-none  bg-transparent mt-4 focus:ring-0  focus:border-gray dark:focus:border-lightGray focus:outline-none"
-                    onFocus={(e) => {
-                      e.target.size = 6;
-                    }}
-                    onBlur={(e) => {
-                      e.target.size = 0;
-                    }}
-                    onChange={(e) => {
-                      e.target.size = 1;
-                      e.target.blur();
-                    }}
-                  >
-                    <option
-                      className="bg-khaki text-white px-3 py-3"
-                      value=""
-                      disabled
+                  {/* <div className="relative w-full mt-4"> */}
+                  {/* The Bar */}
+                  {/* <div
+                      onClick={() => setIsOpen(!isOpen)}
+                      className="w-full h-12 md:h-13 lg:h-[59px] px-4 border border-gray dark:border-lightGray text-gray dark:text-lightGray flex items-center justify-between cursor-pointer bg-transparent"
                     >
-                      Select Subject
-                    </option>
-                    <option
-                      className="bg-whiteSmoke dark:bg-normalBlack text-lightBlack dark:text-white px-3 py-3"
-                      value="option1"
-                    >
-                      Subject One
-                    </option>
-                    <option
-                      className="bg-whiteSmoke dark:bg-normalBlack text-lightBlack dark:text-white px-3 py-3"
-                      value="option2"
-                    >
-                      Subject Two
-                    </option>
-                    <option
-                      className="bg-whiteSmoke dark:bg-normalBlack text-lightBlack dark:text-white px-3 py-3"
-                      value="option3"
-                    >
-                      Select Three
-                    </option>
-                    <option
-                      className="bg-whiteSmoke dark:bg-normalBlack text-lightBlack dark:text-white px-3 py-3"
-                      value="option4"
-                    >
-                      Select Four
-                    </option>
-                  </select>
+                      {selected}
+                      <span className={`transition-transform ${isOpen ? 'rotate-180' : ''}`}>▼</span>
+                    </div> */}
+
+                  {/* The Dropdown Menu */}
+                  {/* {isOpen && (
+                      <ul className="absolute z-50 w-full mt-1 border border-gray dark:border-lightGray bg-whiteSmoke dark:bg-normalBlack shadow-lg">
+                        {options.map((opt) => (
+                          <li
+                            key={opt.value}
+                            onClick={() => {
+                              setSelected(opt.label);
+                              setIsOpen(false);
+                            }}
+                            className="px-4 py-3 cursor-pointer hover:bg-khaki hover:text-white text-lightBlack dark:text-white"
+                          >
+                            {opt.label}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div> */}
                   <textarea
                     name=""
                     id=""
@@ -173,7 +169,7 @@ const Contact = () => {
       {/* google map */}
       <div data-aos="fade-down" data-aos-duration="1000">
         <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d387190.279909073!2d-74.25987368715491!3d40.69767006458873!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2sbd!4v1633418400558!5m2!1sen!2sbd"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1935315.488587208!2d-71.4493840446641!3d18.66789678324563!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8eaf8838def1b6f5%3A0xa6020f24060df7e0!2sDominican%20Republic!5e0!3m2!1sen!2sin!4v1770976528640!5m2!1sen!2sin"
           height={450}
           allowFullScreen=""
           loading="lazy"

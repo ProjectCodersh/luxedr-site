@@ -89,7 +89,7 @@ const HeroSection = () => {
                   </p>
                 </div>
 
-                <Link to="/find_room">
+                <Link to="/packages">
                   <button className="w-[185px] h-[48px] lg:h-[56px] bg-khaki relative before:w-8 before:h-[1px] before:bg-khaki before:absolute before:left-0 before:top-16 text-base font-Garamond font-medium mt-[-6px] hover-animBg after:bg-normalBlack after:rounded-none hover:before:bg-normalBlack uppercase">
                     Book Now
                   </button>
