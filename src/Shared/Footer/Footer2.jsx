@@ -1,4 +1,7 @@
 import { Link } from "react-router-dom";
+import { FaFacebookF, FaPinterestP, FaTwitter } from "react-icons/fa";
+import { BiLogoLinkedin } from "react-icons/bi";
+
 
 const Footer2 = () => {
   return (
@@ -12,7 +15,7 @@ const Footer2 = () => {
             data-aos-duration="1000"
           >
             <img
-              src="/images/extra/site-logo-1.png"
+              src="/images/extra/site-logo-2.png"
               className="dark:hidden"
               alt=""
             />
@@ -39,16 +42,16 @@ const Footer2 = () => {
             </h4>
             <ul className="">
               <li className="text-gray dark:text-lightGray font-normal font-Lora text-sm xl:text-base mb-[15px] hover:text-khaki transition-all duration-300">
-                info.luxedr@gmail.com
+                <Link to="mailto:info.luxedr@gmail.com" className="">info.luxedr@gmail.com</Link>
               </li>
-              {/* <li className="text-gray dark:text-lightGray font-normal font-Lora text-sm xl:text-base mb-[15px] hover:text-khaki transition-all duration-300">
-                Bangladesh Mahanagari <br />
-                Dhaka
-              </li> */}
               <li className="text-gray dark:text-lightGray font-normal font-Lora text-sm xl:text-base mb-[15px] hover:text-khaki transition-all duration-300">
-                +1 (829) 424-7560
+                <Link to="tel:+18294247560" className="">+1 (829) 424-7560</Link>
+              </li>
+              <li className="text-gray dark:text-lightGray font-normal font-Lora text-sm xl:text-base mb-[15px] hover:text-khaki transition-all duration-300">
+                <Link to="https://www.google.com/maps?q=Dominican+Republic" className="">Dominican Republic</Link>
               </li>
             </ul>
+
           </div>
           {/* information*/}
           <div
@@ -59,12 +62,22 @@ const Footer2 = () => {
             <h4 className="text-lg leading-[46px] font-Garamond font-bold text pb-4 md:pb-5  text-lightBlack dark:text-white">
               INFORMATION
             </h4>
+
             <ul className="">
               <li className="text-gray dark:text-lightGray font-normal font-Lora text-sm xl:text-base mb-[15px] hover:text-khaki transition-all duration-300">
-                <Link to="#"> Experiences Page</Link>
+                <Link to="/">Home</Link>
               </li>
               <li className="text-gray dark:text-lightGray font-normal font-Lora text-sm xl:text-base mb-[15px] hover:text-khaki transition-all duration-300">
-                <Link to="#"> Contact Page</Link>
+                <Link to="/experiences">Experiences</Link>
+              </li>
+              <li className="text-gray dark:text-lightGray font-normal font-Lora text-sm xl:text-base mb-[15px] hover:text-khaki transition-all duration-300">
+                <Link to="/about">About</Link>
+              </li>
+              <li className="text-gray dark:text-lightGray font-normal font-Lora text-sm xl:text-base mb-[15px] hover:text-khaki transition-all duration-300">
+                <Link to="/packages">Packages</Link>
+              </li>
+              <li className="text-gray dark:text-lightGray font-normal font-Lora text-sm xl:text-base mb-[15px] hover:text-khaki transition-all duration-300">
+                <Link to="/contact">Contact</Link>
               </li>
             </ul>
           </div>
@@ -77,13 +90,38 @@ const Footer2 = () => {
             <h4 className="text-lg leading-[46px] font-Garamond font-bold text pb-4 md:pb-5  text-lightBlack dark:text-white">
               FOLLOW US
             </h4>
-            <div className="grid grid-cols-3 gap-[10px] py-[5px] 2xl:w-[300px] content-center ">
+            {/* <div className="grid grid-cols-3 gap-[10px] py-[5px] 2xl:w-[300px] content-center ">
               <img src="/images/home-2/gallery-1.jpg" alt="" />
               <img src="/images/home-2/gallery-2.jpg" alt="" />
               <img src="/images/home-2/gallery-3.jpg" alt="" />
               <img src="/images/home-2/gallery-4.jpg" alt="" />
               <img src="/images/home-2/gallery-5.jpg" alt="" />
               <img src="/images/home-2/gallery-6.jpg" alt="" />
+            </div> */}
+            <div>
+              <ul className="flex space-x-3">
+                <li className="hover-animBg group transition-all duration-300  rounded-full border border-lightGray border-opacity-75 hover:border-khaki cursor-pointer w-[37px] h-[37px] grid items-center justify-center">
+                  <Link to="#" className="">
+                    <FaFacebookF className="text-lightGray text-opacity-75 group-hover:text-white group-hover:text-slateBlue-0 w-4 h-4 " />
+                  </Link>
+                </li>
+
+                <li className="hover-animBg group transition-all duration-300  rounded-full border border-lightGray border-opacity-75 hover:border-khaki cursor-pointer w-[37px] h-[37px] grid items-center justify-center">
+                  <Link to="#">
+                    <FaTwitter className="text-lightGray text-opacity-75 group-hover:text-white group-hover:text-slateBlue-0 w-4 h-4 " />
+                  </Link>
+                </li>
+                <li className="hover-animBg group transition-all duration-300  rounded-full border border-lightGray border-opacity-75 hover:border-khaki cursor-pointer w-[37px] h-[37px] grid items-center justify-center">
+                  <Link to="#">
+                    <BiLogoLinkedin className="text-lightGray text-opacity-75 group-hover:text-white group-hover:text-slateBlue-0 w-4 h-4 " />
+                  </Link>
+                </li>
+                <li className="hover-animBg group transition-all duration-300  rounded-full border border-lightGray border-opacity-75 hover:border-khaki cursor-pointer w-[37px] h-[37px] grid items-center justify-center">
+                  <Link to="#">
+                    <FaPinterestP className="text-lightGray text-opacity-75 group-hover:text-white group-hover:text-slateBlue-0 w-4 h-4 " />
+                  </Link>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
