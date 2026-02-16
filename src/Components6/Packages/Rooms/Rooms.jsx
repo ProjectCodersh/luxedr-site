@@ -82,7 +82,7 @@ const Rooms = () => {
               {" "}
               <div className="relative">
                 <img
-                  src="/images/home-5/room-5.jpg"
+                  src="/images/extra/package-bg-1.png"
                   alt="room_images_one"
                   className="w-full h-full"
                 />
@@ -150,7 +150,7 @@ const Rooms = () => {
             <div data-aos="fade-up" data-aos-duration="1000">
               <div className="relative">
                 <img
-                  src="/images/home-5/room-5.jpg"
+                  src="/images/extra/package-bg-6.png"
                   alt="room_images_one"
                   className="w-full h-full"
                 />
@@ -216,7 +216,7 @@ const Rooms = () => {
             <div data-aos="fade-up" data-aos-duration="1000">
               <div className="relative">
                 <img
-                  src="/images/home-5/room-4.jpg"
+                  src="/images/extra/package-bg-5.png"
                   alt="room_images_one"
                   className="w-full h-full"
                 />
@@ -284,7 +284,7 @@ const Rooms = () => {
             <div data-aos="fade-up" data-aos-duration="1000">
               <div className="relative">
                 <img
-                  src="/images/home-5/room-6.jpg"
+                  src="/images/extra/package-bg-4.png"
                   alt="room_images_one"
                   className="w-full h-full"
                 />

@@ -2,63 +2,63 @@
   {
     "category": "lunch",
     "title": "Fusion Midday",
-    "image": "/images/inner/food-1.jpg",
+    "image": "/images/extra/menu-lunch-3.png",
     "description": "Mexican-style tacos with local seafood, Italian pasta with a tropical twist, or Mediterranean grilled chicken salad.",
     "price": "49.00"
   },
   {
     "category": "lunch",
     "title": "Coastal Catch",
-    "image": "/images/inner/food-1.jpg",
+    "image": "/images/extra/menu-lunch-2.png",
     "description": "Fresh pescado frito (fried fish) with tostones, coconut rice, and a tangy Caribbean slaw.",
     "price": "49.00"
   },
   {
     "category": "lunch",
     "title": "Authentic Dominican Lunch",
-    "image": "/images/inner/food-2.jpg",
+    "image": "/images/extra/menu-lunch-1.png",
     "description": "Pollo guisado (stewed chicken) with rice, beans, and a crisp avocado salad.",
     "price": "29.00"
   },
   {
     "category": "dinner",
     "title": "International Gourmet",
-    "image": "/images/inner/food-3.jpg",
+    "image": "/images/extra/menu-dinner-3.png",
     "description": "Japanese sushi platter, Spanish paella, or classic French filet mignon with Caribbean sides.",
     "price": "30.00"
   },
   {
     "category": "dinner",
     "title": "Luxury Seafood Night",
-    "image": "/images/inner/food-3.jpg",
+    "image": "/images/extra/menu-dinner-2.png",
     "description": "Lobster tail with garlic butter, shrimp mofongo, and a glass of fine Dominican rum or wine.",
     "price": "30.00"
   },
   {
     "category": "dinner",
     "title": "Dominican Feast",
-    "image": "/images/inner/food-4.jpg",
+    "image": "/images/extra/menu-dinner-1.png",
     "description": "Sancocho (rich Dominican stew) served with white rice, avocado, and artisanal bread.",
     "price": "22.00"
   },
   {
     "category": "breakfast",
     "title": "International Fusion",
-    "image": "/images/inner/food-1.jpg",
+    "image": "/images/extra/menu-breakfast-3.png",
     "description": "American pancakes with guava syrup, French-style omelets, or a continental breakfast spread with European breads and cheeses.",
     "price": "22.00"
   },
   {
     "category": "breakfast",
     "title": "Caribbean Sunrise",
-    "image": "/images/inner/food-1.jpg",
+    "image": "/images/extra/menu-breakfast-2.png",
     "description": "Arepitas de maíz (corn fritters), yucca fries, fresh avocado, passionfruit juice, and a light cheese plate.",
     "price": "22.00"
   },
   {
     "category": "breakfast",
     "title": "Traditional Dominican Start",
-    "image": "/images/inner/food-5.jpg",
+    "image": "/images/extra/menu-breakfast-1.png",
     "description": "Mangú con Los Tres Golpes (mashed plantains with fried eggs, salami, and queso frito), fresh tropical fruit, and Dominican coffee.",
     "price": "22.00"
   }
