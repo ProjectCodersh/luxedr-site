@@ -220,6 +220,7 @@ const Pricing = () => {
           </div>
         </div>
       </div>
+
       {/* Pricing  */}
       <div className="bg-whiteSmoke dark:bg-lightBlack py-20 2xl:py-[120px]">
         <div className="Container">

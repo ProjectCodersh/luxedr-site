@@ -30,6 +30,7 @@ import BlogDetails from "../Pages/InnerPage/BlogDetails";
 import Contact from "../Pages/InnerPage/Contact";
 import ErrorPage from "../Shared/ErrorPage/ErrorPage";
 import Experiences from "../Pages/InnerPage/Experiences";
+import Packages from "../Pages/InnerPage/Packages";
 
 // Starting React Router.
 const router = createBrowserRouter([
@@ -90,6 +91,10 @@ const router = createBrowserRouter([
       {
         path: "/experiences",
         element: <Experiences />,
+      },
+      {
+        path: "/packages",
+        element: <Packages />,
       },
     ],
   },

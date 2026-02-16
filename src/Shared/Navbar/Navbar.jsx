@@ -217,7 +217,7 @@ const Navbar = () => {
                   : isActive
                     ? "active"
                     : ""} text-lightBlack lg:text-white dark:text-white  lg:border-b-0 px-3 py-2 w-full block transition-all duration-300 group relative `}
-              to="#"
+              to="/packages"
             >
               Packages
               {/* <span className="flex items-center">

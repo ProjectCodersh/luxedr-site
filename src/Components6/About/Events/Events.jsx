@@ -5,7 +5,7 @@ const Events = () => {
   return (
     <section className="">
       {/* Event one */}
-      <div className="bg-[url('/images/home-3/event-bg-1.jpg')] dark:bg-[url('/images/home-3/dark-event-1.jpg')] bg-no-repeat py-20 2xl:py-[133px] bg-cover bg-center">
+      <div className="bg-[url('/images/extra/about-card-2-light.png')] dark:bg-[url('/images/extra/about-card-2-dark.png')] bg-no-repeat py-20 2xl:py-[133px] bg-cover bg-center">
         <div
           className="p-7 md:p-[40px] lg:p-[50px] 2xl:p-[60px] bg-white dark:bg-normalBlack dark: sm:w-[450px] md:w-[550px] xl:w-[590px] ml-[0%] sm:ml-[10%] 3xl:ml-[15%]"
           data-aos="fade-up"
@@ -37,7 +37,7 @@ const Events = () => {
         </div>
       </div>
       {/* event two */}
-      <div className="bg-[url('/images/home-3/event-bg-2.jpg')] dark:bg-[url('/images/home-3/dark-event-2.jpg')] bg-no-repeat py-20 2xl:py-[133px] bg-cover bg-center">
+      <div className="bg-[url('/images/extra/about-card-1-light.png')] dark:bg-[url('/images/extra/about-card-1-dark.png')] bg-no-repeat py-20 2xl:py-[133px] bg-cover bg-center">
         <div
           className="p-7 md:p-[40px] lg:p-[50px] 2xl:p-[60px] bg-white dark:bg-normalBlack dark: sm:w-[450px] md:w-[550px] xl:w-[590px] ml-0 sm:ml-[10%] md:ml-[18%] lg:ml-[35%]  xl:ml-[45%] 2xl:ml-[53%]"
           data-aos="fade-up"

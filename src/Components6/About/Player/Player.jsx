@@ -3,7 +3,7 @@ import FsLightbox from "fslightbox-react";
 const Player = () => {
   const [toggler, setToggler] = useState(false);
   return (
-    <section className="bg-[url('/images/home-3/video-bg.jpg')] py-20 md:py-40 2xl:py-[260px] bg-center bg-no-repeat bg-cover">
+    <section className="bg-[url('/images/extra/player-bg-1.png')] py-20 md:py-40 2xl:py-[260px] bg-center bg-no-repeat bg-cover">
       <div
         className="grid items-center justify-center"
         data-aos="fade-up"
