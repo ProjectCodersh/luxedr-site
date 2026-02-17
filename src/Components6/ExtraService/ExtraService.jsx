@@ -98,9 +98,9 @@ const ExtraService = () => {
               Private dining, stunning villas, and personalized hospitality; all served for our guests.
             </p>
           </div>
-          <Link to="/room">
+          <Link to="/packages">
             <button className="btn-items text-sm md:text-base">
-              BOOK YOUR ROOM
+              BOOK NOW
             </button>
           </Link>
         </div>

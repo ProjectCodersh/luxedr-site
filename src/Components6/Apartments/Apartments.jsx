@@ -244,7 +244,7 @@ const Apartments = () => {
                 </li>
               </ul>
             </div>
-            <Link to={"/pricing"}>
+            <Link to={"/packages"}>
               <button className="btn-primary mt-[30px]">Explore More </button>
             </Link>
           </div>

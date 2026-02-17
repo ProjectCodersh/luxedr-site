@@ -50,7 +50,7 @@ const Testimonial = () => {
           <h1 className="text-xl sm:text-2xl md:text-3xl 2xl:text-[38px] leading-[42px] 2xl:leading-[52px] text-white mt-[20px] mb-[16px] font-Garamond font-semibold uppercase">
             Unforgettable Moments, Shared by Our Guests
           </h1>
-          <Link to={"/pricing"}>
+          <Link to={"/packages"}>
             <button className="btn-primary">Explore Packages</button>
           </Link>
         </div>

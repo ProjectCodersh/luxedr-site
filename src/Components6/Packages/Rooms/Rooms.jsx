@@ -97,37 +97,37 @@ const Rooms = () => {
                   <ul className="space-y-2 2xl:space-y-3">
                     <li className="flex items-center space-x-[8px]">
                       <LiaDotCircleSolid size={16} className="text-khaki" />
-                      <p className="text-sm sm:text-base leading-[26px] text-lightBlack dark:text-white font-medium font-Lora">
+                      <p className="text-sm sm:text-base leading-[26px] text-white font-medium font-Lora">
                         3 Days & 2 Nights
                       </p>
                     </li>
                     <li className="flex items-center space-x-[8px]">
                       <LiaDotCircleSolid size={16} className="text-khaki" />
-                      <p className="text-sm sm:text-base leading-[26px] text-lightBlack dark:text-white font-medium font-Lora">
+                      <p className="text-sm sm:text-base leading-[26px] text-white font-medium font-Lora">
                         Group Size: Up to 4 Guests
                       </p>
                     </li>
                     <li className="flex items-center space-x-[8px]">
                       <LiaDotCircleSolid size={16} className="text-khaki" />
-                      <p className="text-sm sm:text-base leading-[26px] text-lightBlack dark:text-white font-medium font-Lora">
+                      <p className="text-sm sm:text-base leading-[26px] text-white font-medium font-Lora">
                         Airport pickup & return
                       </p>
                     </li>
                     <li className="flex items-center space-x-[8px]">
                       <LiaDotCircleSolid size={16} className="text-khaki" />
-                      <p className="text-sm sm:text-base leading-[26px] text-lightBlack dark:text-white font-medium font-Lora">
+                      <p className="text-sm sm:text-base leading-[26px] text-white font-medium font-Lora">
                         Daily private chef + all food ingredients
                       </p>
                     </li>
                     <li className="flex items-center space-x-[8px]">
                       <LiaDotCircleSolid size={16} className="text-khaki" />
-                      <p className="text-sm sm:text-base leading-[26px] text-lightBlack dark:text-white font-medium font-Lora">
+                      <p className="text-sm sm:text-base leading-[26px] text-white font-medium font-Lora">
                         Dedicated host for your stay
                       </p>
                     </li>
                     <li className="flex items-center space-x-[8px]">
                       <LiaDotCircleSolid size={16} className="text-khaki" />
-                      <p className="text-sm sm:text-base leading-[26px] text-lightBlack dark:text-white font-medium font-Lora">
+                      <p className="text-sm sm:text-base leading-[26px] text-white font-medium font-Lora">
                         One beach tour
                       </p>
                     </li>
@@ -138,7 +138,7 @@ const Rooms = () => {
                   <p className="text-Lora text-[15px] sm:text-[18px] leading-6 font-normal text-white">
                     <span className="text-khaki font-bold "> $1,660</span> USD
                   </p>
-                  <Link to={"/find_room"}>
+                  <Link to={"/contact"}>
                     <button className="btn-primary1">Choose Package</button>
                   </Link>
                 </div>
@@ -163,37 +163,37 @@ const Rooms = () => {
                   <ul className="space-y-2 2xl:space-y-3">
                     <li className="flex items-center space-x-[8px]">
                       <LiaDotCircleSolid size={16} className="text-khaki" />
-                      <p className="text-sm sm:text-base leading-[26px] text-lightBlack dark:text-white font-medium font-Lora">
+                      <p className="text-sm sm:text-base leading-[26px] text-white font-medium font-Lora">
                         5 Days & 4 Nights
                       </p>
                     </li>
                     <li className="flex items-center space-x-[8px]">
                       <LiaDotCircleSolid size={16} className="text-khaki" />
-                      <p className="text-sm sm:text-base leading-[26px] text-lightBlack dark:text-white font-medium font-Lora">
+                      <p className="text-sm sm:text-base leading-[26px] text-white font-medium font-Lora">
                         Group Size: Up to 4 Guests
                       </p>
                     </li>
                     <li className="flex items-center space-x-[8px]">
                       <LiaDotCircleSolid size={16} className="text-khaki" />
-                      <p className="text-sm sm:text-base leading-[26px] text-lightBlack dark:text-white font-medium font-Lora">
+                      <p className="text-sm sm:text-base leading-[26px] text-white font-medium font-Lora">
                         Airport transfers
                       </p>
                     </li>
                     <li className="flex items-center space-x-[8px]">
                       <LiaDotCircleSolid size={16} className="text-khaki" />
-                      <p className="text-sm sm:text-base leading-[26px] text-lightBlack dark:text-white font-medium font-Lora">
+                      <p className="text-sm sm:text-base leading-[26px] text-white font-medium font-Lora">
                         Private chef (daily) + ingredients
                       </p>
                     </li>
                     <li className="flex items-center space-x-[8px]">
                       <LiaDotCircleSolid size={16} className="text-khaki" />
-                      <p className="text-sm sm:text-base leading-[26px] text-lightBlack dark:text-white font-medium font-Lora">
+                      <p className="text-sm sm:text-base leading-[26px] text-white font-medium font-Lora">
                         Host service
                       </p>
                     </li>
                     <li className="flex items-center space-x-[8px]">
                       <LiaDotCircleSolid size={16} className="text-khaki" />
-                      <p className="text-sm sm:text-base leading-[26px] text-lightBlack dark:text-white font-medium font-Lora">
+                      <p className="text-sm sm:text-base leading-[26px] text-white font-medium font-Lora">
                         One adventure excursion
                       </p>
                     </li>
@@ -204,7 +204,7 @@ const Rooms = () => {
                   <p className="text-Lora text-[15px] sm:text-[18px] leading-6 font-normal text-white">
                     <span className="text-khaki font-bold ">$2,900</span> USD
                   </p>
-                  <Link to={"/find_room"}>
+                  <Link to={"/contact"}>
                     <button className="btn-primary1">Choose Package</button>
                   </Link>
                 </div>
@@ -231,37 +231,37 @@ const Rooms = () => {
                   <ul className="space-y-2 2xl:space-y-3">
                     <li className="flex items-center space-x-[8px]">
                       <LiaDotCircleSolid size={16} className="text-khaki" />
-                      <p className="text-sm sm:text-base leading-[26px] text-lightBlack dark:text-white font-medium font-Lora">
+                      <p className="text-sm sm:text-base leading-[26px] text-white font-medium font-Lora">
                         5 Days & 4 Nights
                       </p>
                     </li>
                     <li className="flex items-center space-x-[8px]">
                       <LiaDotCircleSolid size={16} className="text-khaki" />
-                      <p className="text-sm sm:text-base leading-[26px] text-lightBlack dark:text-white font-medium font-Lora">
+                      <p className="text-sm sm:text-base leading-[26px] text-white font-medium font-Lora">
                         Group Size: Up to 4 Guests
                       </p>
                     </li>
                     <li className="flex items-center space-x-[8px]">
                       <LiaDotCircleSolid size={16} className="text-khaki" />
-                      <p className="text-sm sm:text-base leading-[26px] text-lightBlack dark:text-white font-medium font-Lora">
+                      <p className="text-sm sm:text-base leading-[26px] text-white font-medium font-Lora">
                         Airport transfers
                       </p>
                     </li>
                     <li className="flex items-center space-x-[8px]">
                       <LiaDotCircleSolid size={16} className="text-khaki" />
-                      <p className="text-sm sm:text-base leading-[26px] text-lightBlack dark:text-white font-medium font-Lora">
+                      <p className="text-sm sm:text-base leading-[26px] text-white font-medium font-Lora">
                         Private chef (daily) + ingredients
                       </p>
                     </li>
                     <li className="flex items-center space-x-[8px]">
                       <LiaDotCircleSolid size={16} className="text-khaki" />
-                      <p className="text-sm sm:text-base leading-[26px] text-lightBlack dark:text-white font-medium font-Lora">
+                      <p className="text-sm sm:text-base leading-[26px] text-white font-medium font-Lora">
                         Host service
                       </p>
                     </li>
                     <li className="flex items-center space-x-[8px]">
                       <LiaDotCircleSolid size={16} className="text-khaki" />
-                      <p className="text-sm sm:text-base leading-[26px] text-lightBlack dark:text-white font-medium font-Lora">
+                      <p className="text-sm sm:text-base leading-[26px] text-white font-medium font-Lora">
                         Nightlife tour experience
                       </p>
                     </li>
@@ -272,7 +272,7 @@ const Rooms = () => {
                   <p className="text-Lora text-[15px] sm:text-[18px] leading-6 font-normal text-white">
                     <span className="text-khaki font-bold ">$3,680</span> USD
                   </p>
-                  <Link to={"/find_room"}>
+                  <Link to={"/contact"}>
                     <button className="btn-primary1">Choose Package </button>
                   </Link>
                 </div>
@@ -300,37 +300,37 @@ const Rooms = () => {
                   <ul className="space-y-2 2xl:space-y-3">
                     <li className="flex items-center space-x-[8px]">
                       <LiaDotCircleSolid size={16} className="text-khaki" />
-                      <p className="text-sm sm:text-base leading-[26px] text-lightBlack dark:text-white font-medium font-Lora">
+                      <p className="text-sm sm:text-base leading-[26px] text-white font-medium font-Lora">
                         5 Days & 4 Nights
                       </p>
                     </li>
                     <li className="flex items-center space-x-[8px]">
                       <LiaDotCircleSolid size={16} className="text-khaki" />
-                      <p className="text-sm sm:text-base leading-[26px] text-lightBlack dark:text-white font-medium font-Lora">
+                      <p className="text-sm sm:text-base leading-[26px] text-white font-medium font-Lora">
                         Group Size: Up to 4 Guests
                       </p>
                     </li>
                     <li className="flex items-center space-x-[8px]">
                       <LiaDotCircleSolid size={16} className="text-khaki" />
-                      <p className="text-sm sm:text-base leading-[26px] text-lightBlack dark:text-white font-medium font-Lora">
+                      <p className="text-sm sm:text-base leading-[26px] text-white font-medium font-Lora">
                         Airport transfers
                       </p>
                     </li>
                     <li className="flex items-center space-x-[8px]">
                       <LiaDotCircleSolid size={16} className="text-khaki" />
-                      <p className="text-sm sm:text-base leading-[26px] text-lightBlack dark:text-white font-medium font-Lora">
+                      <p className="text-sm sm:text-base leading-[26px] text-white font-medium font-Lora">
                         Private chef (daily) + ingredients
                       </p>
                     </li>
                     <li className="flex items-center space-x-[8px]">
                       <LiaDotCircleSolid size={16} className="text-khaki" />
-                      <p className="text-sm sm:text-base leading-[26px] text-lightBlack dark:text-white font-medium font-Lora">
+                      <p className="text-sm sm:text-base leading-[26px] text-white font-medium font-Lora">
                         Host service
                       </p>
                     </li>
                     <li className="flex items-center space-x-[8px]">
                       <LiaDotCircleSolid size={16} className="text-khaki" />
-                      <p className="text-sm sm:text-base leading-[26px] text-lightBlack dark:text-white font-medium font-Lora">
+                      <p className="text-sm sm:text-base leading-[26px] text-white font-medium font-Lora">
                         Sports-bar / entertainment tour
                       </p>
                     </li>
@@ -344,7 +344,7 @@ const Rooms = () => {
                     </span>{" "}
                     USD
                   </p>
-                  <Link to={"/find_room"}>
+                  <Link to={"/contact"}>
                     <button className="btn-primary1">Choose Package</button>
                   </Link>
                 </div>
