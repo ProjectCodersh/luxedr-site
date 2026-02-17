@@ -25,6 +25,8 @@
     "react-loader-spinner": "^5.4.5",
     "react-router-dom": "^6.15.0",
     "react-select": "^5.8.0",
+    "resend": "^6.9.2",
+    "stripe": "^20.3.1",
     "styled-components": "^6.1.1",
     "sweetalert2": "^11.9.0",
     "swiper": "^10.2.0",

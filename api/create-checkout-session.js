@@ -4,7 +4,22 @@
 
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+// Lazy Stripe client initialization so we can surface clear errors
+let stripe;
+function getStripeClient() {
+  const secretKey = process.env.STRIPE_SECRET_KEY;
+  if (!secretKey) {
+    throw new Error(
+      "Stripe secret key is not configured on the server. Please set STRIPE_SECRET_KEY in your Vercel environment variables."
+    );
+  }
+
+  if (!stripe) {
+    stripe = new Stripe(secretKey);
+  }
+
+  return stripe;
+}
 
 // Get base URL
 function getBaseUrl() {
@@ -46,7 +61,9 @@ export default async function handler(req, res) {
     const priceAmount = parseFloat(packagePrice.replace(/[^0-9.]/g, "")) * 100; // Convert to cents
 
     // Create Stripe Checkout Session
-    const session = await stripe.checkout.sessions.create({
+    const stripeClient = getStripeClient();
+
+    const session = await stripeClient.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: [
         {
