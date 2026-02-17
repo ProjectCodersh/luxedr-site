@@ -1,0 +1,246 @@
+// API endpoint: /api/webhook
+// Handles Stripe webhook events (payment success, etc.)
+// Sends confirmation email to customer and booking details to admin
+// Works with Vercel Serverless Functions
+
+import Stripe from "stripe";
+import { Resend } from "resend";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@royella.com";
+const FROM_EMAIL = process.env.FROM_EMAIL || "noreply@royella.com";
+
+export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
+
+  const sig = req.headers["stripe-signature"];
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+  // Get raw body for webhook signature verification
+  // In Vercel, req.body might be a buffer or string
+  const body =
+    typeof req.body === "string"
+      ? req.body
+      : Buffer.isBuffer(req.body)
+        ? req.body.toString()
+        : JSON.stringify(req.body);
+
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
+  } catch (err) {
+    console.error("Webhook signature verification failed:", err.message);
+    return res.status(400).json({ error: `Webhook Error: ${err.message}` });
+  }
+
+  // Handle the checkout.session.completed event
+  if (event.type === "checkout.session.completed") {
+    const session = event.data.object;
+
+    try {
+      // Retrieve the full session with metadata
+      const fullSession = await stripe.checkout.sessions.retrieve(session.id, {
+        expand: ["customer", "payment_intent"],
+      });
+
+      const metadata = fullSession.metadata;
+      const customerEmail =
+        fullSession.customer_details?.email || fullSession.customer_email;
+
+      // Parse meal preferences from metadata
+      const meals = JSON.parse(metadata.meals || "{}");
+
+      // Prepare booking details
+      const bookingDetails = {
+        packageName: metadata.packageName,
+        packagePrice: metadata.packagePrice,
+        packageId: metadata.packageId,
+        customerEmail,
+        paymentAmount: `$${(fullSession.amount_total / 100).toFixed(2)}`,
+        paymentStatus: fullSession.payment_status,
+        additionalRequests: metadata.additionalRequests || "None",
+        meals: {
+          breakfast: meals.breakfast || {},
+          lunch: meals.lunch || {},
+          dinner: meals.dinner || {},
+        },
+      };
+
+      // Send confirmation email to customer
+      await sendCustomerConfirmationEmail(customerEmail, bookingDetails);
+
+      // Send booking details to admin
+      await sendAdminNotificationEmail(ADMIN_EMAIL, bookingDetails);
+
+      console.log("Emails sent successfully for booking:", session.id);
+    } catch (error) {
+      console.error("Error processing webhook:", error);
+      // Don't fail the webhook - log error but return 200
+    }
+  }
+
+  res.status(200).json({ received: true });
+}
+
+// Customer confirmation email
+async function sendCustomerConfirmationEmail(customerEmail, bookingDetails) {
+  const mealDetails = formatMealDetails(bookingDetails.meals);
+
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: customerEmail,
+      subject: "Booking Confirmed - Thank You for Choosing Royella!",
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background-color: #7d4d00; color: white; padding: 20px; text-align: center; }
+            .content { background-color: #f9f9f9; padding: 20px; }
+            .details { background-color: white; padding: 15px; margin: 10px 0; border-left: 4px solid #7d4d00; }
+            .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>Booking Confirmed!</h1>
+            </div>
+            <div class="content">
+              <p>Dear Valued Guest,</p>
+              <p>Thank you for your booking with Royella! We're excited to host you.</p>
+              
+              <div class="details">
+                <h2>Booking Details</h2>
+                <p><strong>Package:</strong> ${bookingDetails.packageName}</p>
+                <p><strong>Price:</strong> ${bookingDetails.packagePrice} USD</p>
+                <p><strong>Payment Status:</strong> ${bookingDetails.paymentStatus}</p>
+              </div>
+
+              ${mealDetails}
+
+              ${
+                bookingDetails.additionalRequests &&
+                bookingDetails.additionalRequests !== "None"
+                  ? `
+                <div class="details">
+                  <h3>Special Requests</h3>
+                  <p>${bookingDetails.additionalRequests}</p>
+                </div>
+              `
+                  : ""
+              }
+
+              <p>We'll be in touch soon to confirm the details of your stay.</p>
+              <p>If you have any questions, please don't hesitate to contact us.</p>
+            </div>
+            <div class="footer">
+              <p>Best regards,<br>The Royella Team</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+    });
+  } catch (error) {
+    console.error("Error sending customer email:", error);
+    throw error;
+  }
+}
+
+// Admin notification email
+async function sendAdminNotificationEmail(adminEmail, bookingDetails) {
+  const mealDetails = formatMealDetails(bookingDetails.meals);
+
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: adminEmail,
+      subject: `New Booking: ${bookingDetails.packageName}`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background-color: #d32f2f; color: white; padding: 20px; text-align: center; }
+            .content { background-color: #f9f9f9; padding: 20px; }
+            .details { background-color: white; padding: 15px; margin: 10px 0; border-left: 4px solid #d32f2f; }
+            table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+            th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
+            th { background-color: #f2f2f2; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>New Booking Received</h1>
+            </div>
+            <div class="content">
+              <div class="details">
+                <h2>Customer Information</h2>
+                <p><strong>Email:</strong> ${bookingDetails.customerEmail}</p>
+                <p><strong>Package:</strong> ${bookingDetails.packageName}</p>
+                <p><strong>Package ID:</strong> ${bookingDetails.packageId}</p>
+                <p><strong>Price:</strong> ${bookingDetails.packagePrice} USD</p>
+                <p><strong>Payment Amount:</strong> ${bookingDetails.paymentAmount}</p>
+                <p><strong>Payment Status:</strong> ${bookingDetails.paymentStatus}</p>
+              </div>
+
+              ${mealDetails}
+
+              ${
+                bookingDetails.additionalRequests &&
+                bookingDetails.additionalRequests !== "None"
+                  ? `
+                <div class="details">
+                  <h3>Additional Requests</h3>
+                  <p>${bookingDetails.additionalRequests}</p>
+                </div>
+              `
+                  : ""
+              }
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+    });
+  } catch (error) {
+    console.error("Error sending admin email:", error);
+    throw error;
+  }
+}
+
+// Helper function to format meal details
+function formatMealDetails(meals) {
+  let html = '<div class="details"><h3>Meal Preferences</h3>';
+
+  ["breakfast", "lunch", "dinner"].forEach((mealType) => {
+    const meal = meals[mealType];
+    if (meal) {
+      html += `<p><strong>${mealType.charAt(0).toUpperCase() + mealType.slice(1)}:</strong> `;
+      if (meal.menu) {
+        html += `${meal.menu}`;
+      } else {
+        html += "Not selected";
+      }
+      if (meal.customRequested && meal.customNotes) {
+        html += `<br><em>Custom Request:</em> ${meal.customNotes}`;
+      }
+      html += "</p>";
+    }
+  });
+
+  html += "</div>";
+  return html;
+}

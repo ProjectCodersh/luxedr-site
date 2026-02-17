@@ -138,7 +138,7 @@ const Rooms = () => {
                   <p className="text-Lora text-[15px] sm:text-[18px] leading-6 font-normal text-white">
                     <span className="text-khaki font-bold "> $1,660</span> USD
                   </p>
-                  <Link to={"/contact"}>
+                  <Link to="/booking?package=essence-getaway">
                     <button className="btn-primary1">Choose Package</button>
                   </Link>
                 </div>
@@ -204,7 +204,7 @@ const Rooms = () => {
                   <p className="text-Lora text-[15px] sm:text-[18px] leading-6 font-normal text-white">
                     <span className="text-khaki font-bold ">$2,900</span> USD
                   </p>
-                  <Link to={"/contact"}>
+                  <Link to="/booking?package=indulge-stay">
                     <button className="btn-primary1">Choose Package</button>
                   </Link>
                 </div>
@@ -272,7 +272,7 @@ const Rooms = () => {
                   <p className="text-Lora text-[15px] sm:text-[18px] leading-6 font-normal text-white">
                     <span className="text-khaki font-bold ">$3,680</span> USD
                   </p>
-                  <Link to={"/contact"}>
+                  <Link to="/booking?package=serenity-week">
                     <button className="btn-primary1">Choose Package </button>
                   </Link>
                 </div>
@@ -344,7 +344,7 @@ const Rooms = () => {
                     </span>{" "}
                     USD
                   </p>
-                  <Link to={"/contact"}>
+                  <Link to="/booking?package=imperial-retreat">
                     <button className="btn-primary1">Choose Package</button>
                   </Link>
                 </div>

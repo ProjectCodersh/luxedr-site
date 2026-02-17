@@ -31,6 +31,8 @@ import Contact from "../Pages/InnerPage/Contact";
 import ErrorPage from "../Shared/ErrorPage/ErrorPage";
 import Experiences from "../Pages/InnerPage/Experiences";
 import Packages from "../Pages/InnerPage/Packages";
+import Booking from "../Pages/InnerPage/Booking";
+import BookingSuccess from "../Pages/InnerPage/BookingSuccess";
 
 // Starting React Router.
 const router = createBrowserRouter([
@@ -95,6 +97,14 @@ const router = createBrowserRouter([
       {
         path: "/packages",
         element: <Packages />,
+      },
+      {
+        path: "/booking",
+        element: <Booking />,
+      },
+      {
+        path: "/booking-success",
+        element: <BookingSuccess />,
       },
     ],
   },
