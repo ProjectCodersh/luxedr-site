@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { loadStripe } from "@stripe/stripe-js";
 import BreadCrumb from "../../BreadCrumb/BreadCrumb";
 
 // Package options matching Packages page (used for dropdown and URL param pre-selection)
@@ -113,21 +112,14 @@ const Booking = () => {
         );
       }
 
-      const { sessionId } = await response.json();
+      const { url } = await response.json();
 
-      // Initialize Stripe and redirect to Checkout
-      const stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
-      if (!stripe) {
-        throw new Error("Stripe failed to initialize");
+      if (!url) {
+        throw new Error("Checkout URL was not returned from the server.");
       }
 
-      const { error: stripeError } = await stripe.redirectToCheckout({
-        sessionId,
-      });
-
-      if (stripeError) {
-        throw new Error(stripeError.message);
-      }
+      // Redirect directly to Stripe Checkout URL (redirectToCheckout is removed in latest Stripe.js)
+      window.location.href = url;
     } catch (err) {
       console.error("Booking error:", err);
       setError(err.message || "An error occurred. Please try again.");
