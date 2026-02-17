@@ -36,6 +36,7 @@ const Booking = () => {
   const [additionalRequests, setAdditionalRequests] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
   // CHECKING CHANGESS
   // Load menu from same JSON as ServiceDetails (breakfast, lunch, dinner)
   useEffect(() => {
@@ -59,10 +60,30 @@ const Booking = () => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
+    setFieldErrors({});
 
-    // Validate required fields
+    // Validate required fields (package, all three meals, personalization notes)
+    const newErrors = {};
+
     if (!packageId) {
-      setError("Please select a package");
+      newErrors.package = "Please select a package.";
+    }
+    if (!breakfastMenu) {
+      newErrors.breakfastMenu = "Please select a breakfast menu.";
+    }
+    if (!lunchMenu) {
+      newErrors.lunchMenu = "Please select a lunch menu.";
+    }
+    if (!dinnerMenu) {
+      newErrors.dinnerMenu = "Please select a dinner menu.";
+    }
+    if (!additionalRequests.trim()) {
+      newErrors.additionalRequests = "Please add your personalization notes.";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setFieldErrors(newErrors);
+      setError("Please fill in all required fields before continuing.");
       setIsLoading(false);
       return;
     }
@@ -170,6 +191,9 @@ const Booking = () => {
                     </option>
                   ))}
                 </select>
+                {fieldErrors.package && (
+                  <p className="mt-1 text-sm text-red-400 font-Lora">{fieldErrors.package}</p>
+                )}
               </div>
 
               {/* B & C. Meal Preferences + Custom Menu (from food.menu.json, same as ServiceDetails) */}
@@ -194,6 +218,11 @@ const Booking = () => {
                       </option>
                     ))}
                   </select>
+                  {fieldErrors[`${key}Menu`] && (
+                    <p className="mt-1 text-sm text-red-400 font-Lora">
+                      {fieldErrors[`${key}Menu`]}
+                    </p>
+                  )}
                   <label className="flex items-center gap-2 mt-3 cursor-pointer">
                     <input
                       type="checkbox"
@@ -230,6 +259,11 @@ const Booking = () => {
                   rows={5}
                   className="w-full border border-gray bg-lightBlack text-white font-Lora px-4 py-3 outline-none focus:ring-1 focus:ring-khaki focus:border-khaki placeholder:text-lightGray resize-none"
                 />
+                {fieldErrors.additionalRequests && (
+                  <p className="mt-1 text-sm text-red-400 font-Lora">
+                    {fieldErrors.additionalRequests}
+                  </p>
+                )}
               </div>
 
               {/* Error Message */}

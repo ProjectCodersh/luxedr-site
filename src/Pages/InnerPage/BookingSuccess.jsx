@@ -36,7 +36,7 @@ const BookingSuccess = () => {
       <section className="bg-whiteSmoke dark:bg-normalBlack py-20 2xl:py-[120px]">
         <div className="Container">
           <div
-            className="max-w-2xl mx-auto bg-lightBlack p-6 sm:p-8 xl:p-10 rounded-lg shadow-xl text-center"
+            className="bg-lightBlack p-6 sm:p-8 xl:p-10 rounded-lg shadow-xl text-center"
             data-aos="fade-up"
             data-aos-duration="1000"
           >
