@@ -11,6 +11,7 @@ export const PACKAGE_OPTIONS = [
   { id: "imperial-retreat", name: "Imperial Retreat", price: "$5,180" },
 ];
 
+// solving the issue of api keys related errors 
 // Same source as ServiceDetails – breakfast, lunch, dinner menus from food.menu.json
 const CUSTOM_MENU_PLACEHOLDER =
   "Mention your cuisine preference, dietary restrictions, specific dishes, allergies, or any special requests here.";
