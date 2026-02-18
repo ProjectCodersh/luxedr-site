@@ -54,10 +54,10 @@ export default async function handler(req, res) {
 
       // Parse meal preferences from metadata
       const meals = JSON.parse(metadata.meals || "{}");
-      
-      // Parse guest information from metadata
-      const guests = JSON.parse(metadata.guests || "[]");
-      const additionalGuestCount = parseInt(metadata.additionalGuestCount || "0");
+
+      // Parse primary guest + additional people from metadata
+      const mainGuest = JSON.parse(metadata.mainGuest || "{}");
+      const additionalGuestCount = parseInt(metadata.additionalGuestCount || "0", 10);
       const additionalCharges = parseFloat(metadata.additionalCharges || "0");
 
       // Prepare booking details
@@ -74,7 +74,7 @@ export default async function handler(req, res) {
           lunch: meals.lunch || {},
           dinner: meals.dinner || {},
         },
-        guests,
+        mainGuest,
         additionalGuestCount,
         additionalCharges,
       };
@@ -98,7 +98,11 @@ export default async function handler(req, res) {
 // Customer confirmation email
 async function sendCustomerConfirmationEmail(customerEmail, bookingDetails) {
   const mealDetails = formatMealDetails(bookingDetails.meals);
-  const guestDetails = formatGuestDetails(bookingDetails.guests, bookingDetails.additionalGuestCount, bookingDetails.additionalCharges);
+  const guestDetails = formatPrimaryGuestDetails(
+    bookingDetails.mainGuest,
+    bookingDetails.additionalGuestCount,
+    bookingDetails.additionalCharges
+  );
 
   try {
     await resend.emails.send({
@@ -175,7 +179,11 @@ async function sendCustomerConfirmationEmail(customerEmail, bookingDetails) {
 // Admin notification email
 async function sendAdminNotificationEmail(adminEmail, bookingDetails) {
   const mealDetails = formatMealDetails(bookingDetails.meals);
-  const guestDetails = formatGuestDetails(bookingDetails.guests, bookingDetails.additionalGuestCount, bookingDetails.additionalCharges);
+  const guestDetails = formatPrimaryGuestDetails(
+    bookingDetails.mainGuest,
+    bookingDetails.additionalGuestCount,
+    bookingDetails.additionalCharges
+  );
 
   try {
     await resend.emails.send({
@@ -265,31 +273,33 @@ function formatMealDetails(meals) {
   return html;
 }
 
-// Helper function to format guest details
-function formatGuestDetails(guests, additionalGuestCount, additionalCharges) {
-  if (!guests || guests.length === 0) {
-    return '<div class="details"><h3>Guest Information</h3><p>No guest information provided.</p></div>';
-  }
-
+// Helper function to format primary guest + additional people details
+function formatPrimaryGuestDetails(mainGuest, additionalGuestCount, additionalCharges) {
   let html = '<div class="details"><h3>Guest Information</h3>';
-  html += `<p><strong>Total Guests:</strong> ${guests.length}</p>`;
-  
-  if (additionalGuestCount > 0) {
-    html += `<p><strong>Additional Guests:</strong> ${additionalGuestCount} ($${additionalCharges.toFixed(2)} charge)</p>`;
+
+  if (mainGuest) {
+    html += "<p><strong>Primary Guest:</strong></p>";
+    html += "<ul>";
+    html += `<li><strong>Name:</strong> ${mainGuest.name || "N/A"}</li>`;
+    html += `<li><strong>Age:</strong> ${mainGuest.age || "N/A"}</li>`;
+    html += `<li><strong>Gender:</strong> ${
+      mainGuest.gender
+        ? mainGuest.gender.charAt(0).toUpperCase() + mainGuest.gender.slice(1)
+        : "N/A"
+    }</li>`;
+    html += `<li><strong>Email:</strong> ${mainGuest.email || "N/A"}</li>`;
+    html += `<li><strong>Phone:</strong> ${mainGuest.phone || "N/A"}</li>`;
+    html += "</ul>";
   }
 
-  html += '<table><thead><tr><th>Guest #</th><th>Name</th><th>Age</th><th>Gender</th></tr></thead><tbody>';
+  html += `<p><strong>Additional People:</strong> ${additionalGuestCount || 0}</p>`;
 
-  guests.forEach((guest, index) => {
-    const isAdditional = index >= 4;
-    html += `<tr>`;
-    html += `<td>${index + 1}${isAdditional ? ' <em>(Additional)</em>' : ''}</td>`;
-    html += `<td>${guest.name || 'N/A'}</td>`;
-    html += `<td>${guest.age || 'N/A'}</td>`;
-    html += `<td>${guest.gender ? guest.gender.charAt(0).toUpperCase() + guest.gender.slice(1) : 'N/A'}</td>`;
-    html += `</tr>`;
-  });
+  if (additionalGuestCount > 0 && additionalCharges > 0) {
+    html += `<p><strong>Additional Guest Charges:</strong> $${additionalCharges.toFixed(
+      2
+    )}</p>`;
+  }
 
-  html += '</tbody></table></div>';
+  html += "</div>";
   return html;
 }

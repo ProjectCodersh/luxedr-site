@@ -38,15 +38,20 @@ const Booking = () => {
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
 
-  // Guest information state - initialize with 4 empty guests
-  const [guests, setGuests] = useState([
-    { name: "", age: "", gender: "" },
-    { name: "", age: "", gender: "" },
-    { name: "", age: "", gender: "" },
-    { name: "", age: "", gender: "" },
-  ]);
+  // Primary guest information (person making the booking)
+  const [mainGuest, setMainGuest] = useState({
+    name: "",
+    age: "",
+    gender: "",
+    email: "",
+    phone: "",
+  });
 
-  const ADDITIONAL_GUEST_CHARGE = 60; // $60 per additional guest
+  // Number of additional people (0–4)
+  const [additionalPeople, setAdditionalPeople] = useState(0);
+
+  const MAX_ADDITIONAL_PEOPLE = 4;
+  const ADDITIONAL_GUEST_CHARGE = 60; // $60 per additional person
   // CHECKING CHANGESS
   // Load menu from same JSON as ServiceDetails (breakfast, lunch, dinner)
   useEffect(() => {
@@ -67,8 +72,7 @@ const Booking = () => {
   }, [packageParam]);
 
   // Calculate additional guest charges
-  const additionalGuests = guests.length > 4 ? guests.slice(4) : [];
-  const additionalGuestCount = additionalGuests.length;
+  const additionalGuestCount = additionalPeople;
   const additionalCharges = additionalGuestCount * ADDITIONAL_GUEST_CHARGE;
 
   // Calculate total price
@@ -76,26 +80,6 @@ const Booking = () => {
     ? parseFloat(PACKAGE_OPTIONS.find((p) => p.id === packageId)?.price.replace(/[^0-9.]/g, "") || 0)
     : 0;
   const totalPrice = packagePriceValue + additionalCharges;
-
-  // Update guest information
-  const updateGuest = (index, field, value) => {
-    const updatedGuests = [...guests];
-    updatedGuests[index] = { ...updatedGuests[index], [field]: value };
-    setGuests(updatedGuests);
-  };
-
-  // Add a new guest
-  const addGuest = () => {
-    setGuests([...guests, { name: "", age: "", gender: "" }]);
-  };
-
-  // Remove a guest (only if beyond the first 4)
-  const removeGuest = (index) => {
-    if (index >= 4 && guests.length > 4) {
-      const updatedGuests = guests.filter((_, i) => i !== index);
-      setGuests(updatedGuests);
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -122,18 +106,22 @@ const Booking = () => {
       newErrors.additionalRequests = "Please add your personalization notes.";
     }
 
-    // Validate guest information
-    guests.forEach((guest, index) => {
-      if (!guest.name.trim()) {
-        newErrors[`guest_${index}_name`] = `Guest ${index + 1} name is required.`;
-      }
-      if (!guest.age || parseInt(guest.age) <= 0) {
-        newErrors[`guest_${index}_age`] = `Guest ${index + 1} age is required.`;
-      }
-      if (!guest.gender) {
-        newErrors[`guest_${index}_gender`] = `Guest ${index + 1} gender is required.`;
-      }
-    });
+    // Validate primary guest information
+    if (!mainGuest.name.trim()) {
+      newErrors.mainGuestName = "Please enter your full name.";
+    }
+    if (!mainGuest.age || parseInt(mainGuest.age, 10) <= 0) {
+      newErrors.mainGuestAge = "Please enter a valid age.";
+    }
+    if (!mainGuest.gender) {
+      newErrors.mainGuestGender = "Please select your gender.";
+    }
+    if (!mainGuest.email.trim()) {
+      newErrors.mainGuestEmail = "Please enter your email address.";
+    }
+    if (!mainGuest.phone.trim()) {
+      newErrors.mainGuestPhone = "Please enter your phone number.";
+    }
 
     if (Object.keys(newErrors).length > 0) {
       setFieldErrors(newErrors);
@@ -166,7 +154,7 @@ const Booking = () => {
           },
         },
         additionalRequests,
-        guests: guests.filter((g) => g.name.trim() && g.age && g.gender), // Only include filled guests
+        mainGuest,
         additionalGuestCount,
         additionalCharges,
         totalPrice,
@@ -306,127 +294,151 @@ const Booking = () => {
                 </div>
               ))}
 
-              {/* Guest Information Section */}
+              {/* Primary Guest Information + Additional People */}
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <label className="block text-white font-Lora font-medium">
-                    Guest Information
-                  </label>
-                  <span className="text-sm text-lightGray font-Lora">
-                    {guests.length} guest{guests.length !== 1 ? "s" : ""}
-                  </span>
-                </div>
-
-                {guests.map((guest, index) => (
-                  <div
-                    key={index}
-                    // className="bg-gray/20 p-4 rounded-lg border border-gray/50 space-y-3"
-                    className="border border-gray bg-[#272727] text-white font-Lora p-4 outline-none space-y-3"
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-white font-Lora font-medium">
-                        Guest {index + 1}
-                        {index >= 4 && (
-                          <span className="ml-2 text-[#fdc477] font-semibold text-md">
-                            (+${ADDITIONAL_GUEST_CHARGE})
-                          </span>
-                        )}
-                      </h3>
-                      {index >= 4 && (
-                        <button
-                          type="button"
-                          onClick={() => removeGuest(index)}
-                          className="text-khaki font-bold text-md font-Lora"
-                        >
-                          Remove
-                        </button>
+                <div>
+                  <h3 className="text-white font-Lora font-medium mb-3">
+                    Primary Guest Details
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-lightGray text-sm font-Lora mb-1">
+                        Full Name *
+                      </label>
+                      <input
+                        type="text"
+                        value={mainGuest.name}
+                        onChange={(e) =>
+                          setMainGuest((prev) => ({ ...prev, name: e.target.value }))
+                        }
+                        placeholder="Your full name"
+                        className="w-full h-[45px] border border-gray bg-lightBlack text-white font-Lora px-4 outline-none focus:ring-1 focus:ring-khaki focus:border-khaki placeholder:text-lightGray"
+                      />
+                      {fieldErrors.mainGuestName && (
+                        <p className="mt-1 text-xs text-red-400 font-Lora">
+                          {fieldErrors.mainGuestName}
+                        </p>
                       )}
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                      <div>
-                        <label className="block text-lightGray text-sm font-Lora mb-1">
-                          Name *
-                        </label>
-                        <input
-                          type="text"
-                          value={guest.name}
-                          onChange={(e) => updateGuest(index, "name", e.target.value)}
-                          placeholder="Full name"
-                          className="w-full h-[45px] border border-gray bg-lightBlack text-white font-Lora px-4 outline-none focus:ring-1 focus:ring-khaki focus:border-khaki placeholder:text-lightGray"
-                        />
-                        {fieldErrors[`guest_${index}_name`] && (
-                          <p className="mt-1 text-xs text-red-400 font-Lora">
-                            {fieldErrors[`guest_${index}_name`]}
-                          </p>
-                        )}
-                      </div>
+                    <div>
+                      <label className="block text-lightGray text-sm font-Lora mb-1">
+                        Age *
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        value={mainGuest.age}
+                        onChange={(e) =>
+                          setMainGuest((prev) => ({ ...prev, age: e.target.value }))
+                        }
+                        placeholder="Your age"
+                        className="w-full h-[45px] border border-gray bg-lightBlack text-white font-Lora px-4 outline-none focus:ring-1 focus:ring-khaki focus:border-khaki placeholder:text-lightGray"
+                      />
+                      {fieldErrors.mainGuestAge && (
+                        <p className="mt-1 text-xs text-red-400 font-Lora">
+                          {fieldErrors.mainGuestAge}
+                        </p>
+                      )}
+                    </div>
 
-                      <div>
-                        <label className="block text-lightGray text-sm font-Lora mb-1">
-                          Age *
-                        </label>
-                        <input
-                          type="number"
-                          min="1"
-                          value={guest.age}
-                          onChange={(e) => updateGuest(index, "age", e.target.value)}
-                          placeholder="Age"
-                          className="w-full h-[45px] border border-gray bg-lightBlack text-white font-Lora px-4 outline-none focus:ring-1 focus:ring-khaki focus:border-khaki placeholder:text-lightGray"
-                        />
-                        {fieldErrors[`guest_${index}_age`] && (
-                          <p className="mt-1 text-xs text-red-400 font-Lora">
-                            {fieldErrors[`guest_${index}_age`]}
-                          </p>
-                        )}
-                      </div>
+                    <div>
+                      <label className="block text-lightGray text-sm font-Lora mb-1">
+                        Gender *
+                      </label>
+                      <select
+                        value={mainGuest.gender}
+                        onChange={(e) =>
+                          setMainGuest((prev) => ({ ...prev, gender: e.target.value }))
+                        }
+                        className="w-full h-[45px] border border-gray bg-lightBlack text-white font-Lora px-4 outline-none focus:ring-1 focus:ring-khaki focus:border-khaki"
+                      >
+                        <option value="">Select</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                        <option value="prefer-not-to-say">Prefer not to say</option>
+                      </select>
+                      {fieldErrors.mainGuestGender && (
+                        <p className="mt-1 text-xs text-red-400 font-Lora">
+                          {fieldErrors.mainGuestGender}
+                        </p>
+                      )}
+                    </div>
 
-                      <div>
-                        <label className="block text-lightGray text-sm font-Lora mb-1">
-                          Gender *
-                        </label>
-                        <select
-                          value={guest.gender}
-                          onChange={(e) => updateGuest(index, "gender", e.target.value)}
-                          className="w-full h-[45px] border border-gray bg-lightBlack text-white font-Lora px-4 outline-none focus:ring-1 focus:ring-khaki focus:border-khaki"
-                        >
-                          <option value="">Select</option>
-                          <option value="male">Male</option>
-                          <option value="female">Female</option>
-                          <option value="other">Other</option>
-                          <option value="prefer-not-to-say">Prefer not to say</option>
-                        </select>
-                        {fieldErrors[`guest_${index}_gender`] && (
-                          <p className="mt-1 text-xs text-red-400 font-Lora">
-                            {fieldErrors[`guest_${index}_gender`]}
-                          </p>
-                        )}
-                      </div>
+                    <div>
+                      <label className="block text-lightGray text-sm font-Lora mb-1">
+                        Email *
+                      </label>
+                      <input
+                        type="email"
+                        value={mainGuest.email}
+                        onChange={(e) =>
+                          setMainGuest((prev) => ({ ...prev, email: e.target.value }))
+                        }
+                        placeholder="you@example.com"
+                        className="w-full h-[45px] border border-gray bg-lightBlack text-white font-Lora px-4 outline-none focus:ring-1 focus:ring-khaki focus:border-khaki placeholder:text-lightGray"
+                      />
+                      {fieldErrors.mainGuestEmail && (
+                        <p className="mt-1 text-xs text-red-400 font-Lora">
+                          {fieldErrors.mainGuestEmail}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-lightGray text-sm font-Lora mb-1">
+                        Phone Number *
+                      </label>
+                      <input
+                        type="tel"
+                        value={mainGuest.phone}
+                        onChange={(e) =>
+                          setMainGuest((prev) => ({ ...prev, phone: e.target.value }))
+                        }
+                        placeholder="Contact number"
+                        className="w-full h-[45px] border border-gray bg-lightBlack text-white font-Lora px-4 outline-none focus:ring-1 focus:ring-khaki focus:border-khaki placeholder:text-lightGray"
+                      />
+                      {fieldErrors.mainGuestPhone && (
+                        <p className="mt-1 text-xs text-red-400 font-Lora">
+                          {fieldErrors.mainGuestPhone}
+                        </p>
+                      )}
                     </div>
                   </div>
-                ))}
+                </div>
 
-                {/* <button
-                  type="button"
-                  onClick={addGuest}
-                  className="w-full py-2 border border-khaki text-khaki hover:bg-khaki hover:text-lightBlack font-Lora transition-colors duration-200 rounded"
-                >
-                  + Add Additional Guest (${ADDITIONAL_GUEST_CHARGE} per guest)
-                </button> */}
-
-                <button
-                  type="button"
-                  onClick={addGuest}
-                  className="btn-primary1 disabled:opacity-50 disabled:cursor-not-allowed"
-                  style={{ minWidth: "325px", maxWidth: "375px", width: "100%" }}
-                >
-                  Add Additional Guest ( ${ADDITIONAL_GUEST_CHARGE} per guest )
-                </button>
+                <div className="border border-gray text-white font-Lora p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-medium">Additional People</h4>
+                      <p className="text-xs text-lightGray mt-1">
+                        You can bring up to {MAX_ADDITIONAL_PEOPLE} additional people (maximum 8 guests in total).
+                      </p>
+                    </div>
+                  </div>
+                  <div className="mt-2 max-w-xs">
+                    <label className="block text-lightGray text-sm font-Lora mb-1">
+                      Number of additional people
+                    </label>
+                    <select
+                      value={additionalPeople}
+                      onChange={(e) => setAdditionalPeople(parseInt(e.target.value, 10) || 0)}
+                      className="w-full h-[45px] border border-gray bg-lightBlack text-white font-Lora px-4 outline-none focus:ring-1 focus:ring-khaki focus:border-khaki"
+                    >
+                      {Array.from({ length: MAX_ADDITIONAL_PEOPLE + 1 }).map((_, idx) => (
+                        <option key={idx} value={idx}>
+                          {idx}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
               </div>
 
               {/* Price Breakdown */}
               {packageId && (
-                <div className="bg-gray/20 p-4 rounded-lg border border-gray/50">
+                <div className="p-4 border border-gray/50">
                   <h3 className="text-white font-Lora font-medium mb-3">Price Breakdown</h3>
                   <div className="space-y-2 text-lightGray font-Lora">
                     <div className="flex justify-between">
