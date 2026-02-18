@@ -12,7 +12,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 // Admin email is intentionally fixed as requested
 const ADMIN_EMAIL = "project.codersh@gmail.com";
 // FROM must be a verified / allowed sender in Resend (cannot be arbitrary user email)
-const FROM_EMAIL = "LuxeDR <onboarding@resend.dev>";
+const FROM_EMAIL = "<onboarding@resend.dev>";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
