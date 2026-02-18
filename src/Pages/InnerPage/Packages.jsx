@@ -4,7 +4,6 @@ import Faqs from "../../Components6/Packages/Rooms/Faqs";
 // import ExtraFacilities from "../../Components6/Packages/Rooms/ExtraFacilities";
 import Rooms from "../../Components6/Packages/Rooms/Rooms";
 import ServiceDetails from "../../Components6/Packages/Rooms/ServiceDetails";
-
 const Packages = () => {
 
 
@@ -20,3 +19,5 @@ const Packages = () => {
 };
 
 export default Packages;
+
+// packages are almost working fine 
