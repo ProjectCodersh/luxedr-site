@@ -63,7 +63,7 @@ const BookingSuccess = () => {
                   Booking Confirmed!
                 </h2>
                 <p className="text-lightGray mb-6">
-                  Thank you for your booking with Royella. Your payment has been processed successfully.
+                  Thank you for your booking with LuxeDR. Your payment has been processed successfully.
                 </p>
                 <p className="text-white mb-6">
                   A confirmation email has been sent to your email address with all the booking details.
@@ -72,11 +72,11 @@ const BookingSuccess = () => {
                   We'll be in touch soon to confirm the details of your stay.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link to="/" className="btn-primary1">
-                    Return Home
+                  <Link to={"/"}>
+                    <button className="btn-primary">Return Home</button>
                   </Link>
-                  <Link to="/packages" className="btn-primary1 bg-transparent border border-khaki hover:bg-khaki">
-                    View Packages
+                  <Link to={"/packages"}>
+                    <button className="btn-primary">View Packages </button>
                   </Link>
                 </div>
               </div>
