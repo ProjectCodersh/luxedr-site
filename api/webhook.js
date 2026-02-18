@@ -49,14 +49,17 @@ export default async function handler(req, res) {
       });
 
       const metadata = fullSession.metadata;
-      const customerEmail =
-        fullSession.customer_details?.email || fullSession.customer_email;
-
-      // Parse meal preferences from metadata
-      const meals = JSON.parse(metadata.meals || "{}");
 
       // Parse primary guest + additional people from metadata
       const mainGuest = JSON.parse(metadata.mainGuest || "{}");
+      const formEmail =
+        (typeof mainGuest.email === "string" && mainGuest.email.trim()) || "";
+      const stripeEmail =
+        fullSession.customer_details?.email || fullSession.customer_email || "";
+      const customerEmail = formEmail || stripeEmail;
+
+      // Parse meal preferences from metadata
+      const meals = JSON.parse(metadata.meals || "{}");
       const additionalGuestCount = parseInt(
         metadata.additionalGuestCount || "0",
         10,
@@ -74,6 +77,8 @@ export default async function handler(req, res) {
       );
 
       // Prepare booking details
+      const totalGuests = 1 + (additionalGuestCount > 0 ? additionalGuestCount : 0);
+
       const bookingDetails = {
         packageName: metadata.packageName,
         packagePrice: metadata.packagePrice,
@@ -92,6 +97,7 @@ export default async function handler(req, res) {
         additionalCharges,
         arrivalDate,
         endDate,
+        totalGuests,
         packageDurationDays,
         packageDurationNights,
       };
@@ -112,20 +118,16 @@ export default async function handler(req, res) {
   res.status(200).json({ received: true });
 }
 
-// Customer confirmation email
+// Customer confirmation email (simple thank-you with key details)
 async function sendCustomerConfirmationEmail(customerEmail, bookingDetails) {
-  const mealDetails = formatMealDetails(bookingDetails.meals);
-  const guestDetails = formatPrimaryGuestDetails(
-    bookingDetails.mainGuest,
-    bookingDetails.additionalGuestCount,
-    bookingDetails.additionalCharges,
-  );
+  const primaryName = bookingDetails.mainGuest?.name || "Guest";
+  const totalGuests = bookingDetails.totalGuests || 1;
 
   try {
     await resend.emails.send({
       from: FROM_EMAIL,
       to: customerEmail,
-      subject: "Booking Confirmed - Thank You for Choosing LuxeDR!",
+      subject: "Thank you for your booking with Royella",
       html: `
         <!DOCTYPE html>
         <html>
@@ -137,57 +139,44 @@ async function sendCustomerConfirmationEmail(customerEmail, bookingDetails) {
             .content { background-color: #f9f9f9; padding: 20px; }
             .details { background-color: white; padding: 15px; margin: 10px 0; border-left: 4px solid #7d4d00; }
             .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
-            table { width: 100%; border-collapse: collapse; margin: 10px 0; }
-            th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
-            th { background-color: #f2f2f2; }
           </style>
         </head>
         <body>
           <div class="container">
             <div class="header">
-              <h1>Booking Confirmed!</h1>
+              <h1>Booking Confirmed</h1>
             </div>
             <div class="content">
-              <p>Dear Valued Guest,</p>
-              <p>Thank you for your booking with LuxeDR! We're excited to host you.</p>
+              <p>Dear ${primaryName},</p>
+              <p>Thank you for your booking with Royella. We're delighted to host you.</p>
               
               <div class="details">
-                <h2>Booking Details</h2>
+                <h2>Your Booking Summary</h2>
                 <p><strong>Package:</strong> ${bookingDetails.packageName}</p>
-                <p><strong>Base Price:</strong> ${bookingDetails.packagePrice} USD</p>
-                ${bookingDetails.arrivalDate ? `<p><strong>Arrival Date:</strong> ${bookingDetails.arrivalDate}</p>` : ""}
-                ${bookingDetails.endDate ? `<p><strong>End Date:</strong> ${bookingDetails.endDate}</p>` : ""}
+                ${
+                  bookingDetails.arrivalDate
+                    ? `<p><strong>Arrival Date:</strong> ${bookingDetails.arrivalDate}</p>`
+                    : ""
+                }
+                ${
+                  bookingDetails.endDate
+                    ? `<p><strong>End Date:</strong> ${bookingDetails.endDate}</p>`
+                    : ""
+                }
                 ${
                   bookingDetails.packageDurationDays
                     ? `<p><strong>Duration:</strong> ${bookingDetails.packageDurationDays} day${bookingDetails.packageDurationDays !== 1 ? "s" : ""} & ${bookingDetails.packageDurationNights} night${bookingDetails.packageDurationNights !== 1 ? "s" : ""}</p>`
                     : ""
                 }
-                ${bookingDetails.additionalCharges > 0 ? `<p><strong>Additional Guest Charges:</strong> $${bookingDetails.additionalCharges.toFixed(2)} USD</p>` : ""}
-                <p><strong>Total Amount:</strong> ${bookingDetails.paymentAmount} USD</p>
-                <p><strong>Payment Status:</strong> ${bookingDetails.paymentStatus}</p>
+                <p><strong>Total Guests:</strong> ${totalGuests}</p>
+                <p><strong>Total Amount Paid:</strong> ${bookingDetails.paymentAmount}</p>
               </div>
 
-              ${guestDetails}
-
-              ${mealDetails}
-
-              ${
-                bookingDetails.additionalRequests &&
-                bookingDetails.additionalRequests !== "None"
-                  ? `
-                <div class="details">
-                  <h3>Special Requests</h3>
-                  <p>${bookingDetails.additionalRequests}</p>
-                </div>
-              `
-                  : ""
-              }
-
-              <p>We'll be in touch soon to confirm the details of your stay.</p>
-              <p>If you have any questions, please don't hesitate to contact us.</p>
+              <p>We will contact you soon with any additional details or questions regarding your stay.</p>
+              <p>If you need to update your booking or have any questions, simply reply to this email.</p>
             </div>
             <div class="footer">
-              <p>Best regards,<br>The LuxeDR Team</p>
+              <p>Warm regards,<br>The Royella Team</p>
             </div>
           </div>
         </body>
