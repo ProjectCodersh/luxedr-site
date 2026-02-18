@@ -399,7 +399,7 @@ const Navbar = () => {
                 />
               )}
             </span>
-            <Link to="/contact">
+            <Link to="/booking">
               <button className="btn-secondary ">Booking Online</button>
             </Link>
           </div>

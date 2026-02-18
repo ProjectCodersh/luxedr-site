@@ -47,8 +47,17 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { packageId, packageName, packagePrice, meals, additionalRequests } =
-      req.body;
+    const {
+      packageId,
+      packageName,
+      packagePrice,
+      meals,
+      additionalRequests,
+      guests = [],
+      additionalGuestCount = 0,
+      additionalCharges = 0,
+      totalPrice = 0,
+    } = req.body;
 
     // Validate required fields
     if (!packageId || !packageName || !packagePrice) {
@@ -58,26 +67,45 @@ export default async function handler(req, res) {
     }
 
     // Extract numeric price from string like "$1,660"
-    const priceAmount = parseFloat(packagePrice.replace(/[^0-9.]/g, "")) * 100; // Convert to cents
+    const packagePriceAmount = parseFloat(packagePrice.replace(/[^0-9.]/g, "")) * 100; // Convert to cents
+    const additionalChargesAmount = Math.round(additionalCharges * 100); // Convert to cents
 
     // Create Stripe Checkout Session
     const stripeClient = getStripeClient();
 
+    // Build line items array
+    const lineItems = [
+      {
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: packageName,
+            description: `Package booking with meal preferences`,
+          },
+          unit_amount: packagePriceAmount,
+        },
+        quantity: 1,
+      },
+    ];
+
+    // Add line item for additional guests if any
+    if (additionalGuestCount > 0 && additionalChargesAmount > 0) {
+      lineItems.push({
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: `Additional Guests (${additionalGuestCount} guest${additionalGuestCount !== 1 ? "s" : ""})`,
+            description: `Additional guest charge: $${additionalCharges} for ${additionalGuestCount} guest${additionalGuestCount !== 1 ? "s" : ""}`,
+          },
+          unit_amount: additionalChargesAmount,
+        },
+        quantity: 1,
+      });
+    }
+
     const session = await stripeClient.checkout.sessions.create({
       payment_method_types: ["card"],
-      line_items: [
-        {
-          price_data: {
-            currency: "usd",
-            product_data: {
-              name: packageName,
-              description: `Package booking with meal preferences`,
-            },
-            unit_amount: priceAmount,
-          },
-          quantity: 1,
-        },
-      ],
+      line_items: lineItems,
       mode: "payment",
       success_url: `${getBaseUrl()}/booking-success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${getBaseUrl()}/booking?package=${packageId}`,
@@ -87,6 +115,10 @@ export default async function handler(req, res) {
         packagePrice,
         meals: JSON.stringify(meals),
         additionalRequests: additionalRequests || "",
+        guests: JSON.stringify(guests),
+        additionalGuestCount: additionalGuestCount.toString(),
+        additionalCharges: additionalCharges.toString(),
+        totalPrice: totalPrice.toString(),
       },
     });
 

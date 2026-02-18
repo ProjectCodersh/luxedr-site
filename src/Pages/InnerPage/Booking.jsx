@@ -37,6 +37,16 @@ const Booking = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
+
+  // Guest information state - initialize with 4 empty guests
+  const [guests, setGuests] = useState([
+    { name: "", age: "", gender: "" },
+    { name: "", age: "", gender: "" },
+    { name: "", age: "", gender: "" },
+    { name: "", age: "", gender: "" },
+  ]);
+
+  const ADDITIONAL_GUEST_CHARGE = 60; // $60 per additional guest
   // CHECKING CHANGESS
   // Load menu from same JSON as ServiceDetails (breakfast, lunch, dinner)
   useEffect(() => {
@@ -55,6 +65,54 @@ const Booking = () => {
       setPackageId(packageParam);
     }
   }, [packageParam]);
+
+  // Calculate additional guest charges
+  const additionalGuests = guests.length > 4 ? guests.slice(4) : [];
+  const additionalGuestCount = additionalGuests.length;
+  const additionalCharges = additionalGuestCount * ADDITIONAL_GUEST_CHARGE;
+
+  // Calculate total price
+  const packagePriceValue = packageId
+    ? parseFloat(PACKAGE_OPTIONS.find((p) => p.id === packageId)?.price.replace(/[^0-9.]/g, "") || 0)
+    : 0;
+  const totalPrice = packagePriceValue + additionalCharges;
+
+  // Update guest information
+  const updateGuest = (index, field, value) => {
+    const updatedGuests = [...guests];
+    updatedGuests[index] = { ...updatedGuests[index], [field]: value };
+    setGuests(updatedGuests);
+
+    // Clear validation error for this specific field when user starts typing
+    if (fieldErrors[`guest_${index}_${field}`]) {
+      const updatedErrors = { ...fieldErrors };
+      delete updatedErrors[`guest_${index}_${field}`];
+      setFieldErrors(updatedErrors);
+    }
+  };
+
+  // Add a new guest
+  const addGuest = () => {
+    // Clear any existing validation errors when adding a guest
+    setFieldErrors({});
+    setError("");
+    setGuests([...guests, { name: "", age: "", gender: "" }]);
+  };
+
+  // Remove a guest (only if beyond the first 4)
+  const removeGuest = (index) => {
+    if (index >= 4 && guests.length > 4) {
+      // Clear validation errors for the removed guest
+      const updatedErrors = { ...fieldErrors };
+      delete updatedErrors[`guest_${index}_name`];
+      delete updatedErrors[`guest_${index}_age`];
+      delete updatedErrors[`guest_${index}_gender`];
+      setFieldErrors(updatedErrors);
+
+      const updatedGuests = guests.filter((_, i) => i !== index);
+      setGuests(updatedGuests);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -80,6 +138,19 @@ const Booking = () => {
     if (!additionalRequests.trim()) {
       newErrors.additionalRequests = "Please add your personalization notes.";
     }
+
+    // Validate guest information
+    guests.forEach((guest, index) => {
+      if (!guest.name.trim()) {
+        newErrors[`guest_${index}_name`] = `Guest ${index + 1} name is required.`;
+      }
+      if (!guest.age || parseInt(guest.age) <= 0) {
+        newErrors[`guest_${index}_age`] = `Guest ${index + 1} age is required.`;
+      }
+      if (!guest.gender) {
+        newErrors[`guest_${index}_gender`] = `Guest ${index + 1} gender is required.`;
+      }
+    });
 
     if (Object.keys(newErrors).length > 0) {
       setFieldErrors(newErrors);
@@ -112,6 +183,10 @@ const Booking = () => {
           },
         },
         additionalRequests,
+        guests: guests.filter((g) => g.name.trim() && g.age && g.gender), // Only include filled guests
+        additionalGuestCount,
+        additionalCharges,
+        totalPrice,
       };
 
       // Call API to create Stripe Checkout Session
@@ -180,7 +255,15 @@ const Booking = () => {
                 <select
                   id="package"
                   value={packageId}
-                  onChange={(e) => setPackageId(e.target.value)}
+                  onChange={(e) => {
+                    setPackageId(e.target.value);
+                    // Clear package validation error when user selects a package
+                    if (fieldErrors.package) {
+                      const updatedErrors = { ...fieldErrors };
+                      delete updatedErrors.package;
+                      setFieldErrors(updatedErrors);
+                    }
+                  }}
                   className="w-full h-[50px] border border-gray bg-lightBlack text-white font-Lora px-4 outline-none focus:ring-1 focus:ring-khaki focus:border-khaki"
                   required
                 >
@@ -208,8 +291,18 @@ const Booking = () => {
                   </label>
                   <select
                     value={value}
-                    onChange={(e) => setValue(e.target.value)}
-                    className="w-full h-[50px] border border-gray bg-lightBlack text-white font-Lora px-4 outline-none focus:ring-1 focus:ring-khaki focus:border-khaki"
+                    onChange={(e) => {
+                      setValue(e.target.value);
+                      // Clear validation error when user selects a menu
+                      if (fieldErrors[`${key}Menu`]) {
+                        const updatedErrors = { ...fieldErrors };
+                        delete updatedErrors[`${key}Menu`];
+                        setFieldErrors(updatedErrors);
+                      }
+                    }}
+                    disabled={customChecked}
+                    aria-disabled={customChecked}
+                    className={`w-full h-[50px] border border-gray bg-lightBlack text-white font-Lora px-4 outline-none focus:ring-1 focus:ring-khaki focus:border-khaki ${customChecked ? "opacity-50 cursor-not-allowed" : ""}`}
                   >
                     <option value="">Select Menu</option>
                     {menus.map((item) => (
@@ -246,6 +339,156 @@ const Booking = () => {
                 </div>
               ))}
 
+              {/* Guest Information Section */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <label className="block text-white font-Lora font-medium">
+                    Guest Information
+                  </label>
+                  <span className="text-sm text-lightGray font-Lora">
+                    {guests.length} guest{guests.length !== 1 ? "s" : ""}
+                  </span>
+                </div>
+
+                {guests.map((guest, index) => (
+                  <div
+                    key={index}
+                    // className="bg-gray/20 p-4 rounded-lg border border-gray/50 space-y-3"
+                    className="border border-gray bg-[#272727] text-white font-Lora p-4 outline-none space-y-3"
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="text-white font-Lora font-medium">
+                        Guest {index + 1}
+                        {index >= 4 && (
+                          <span className="ml-2 text-[#fdc477] font-semibold text-md">
+                            (+${ADDITIONAL_GUEST_CHARGE})
+                          </span>
+                        )}
+                      </h3>
+                      {index >= 4 && (
+                        <button
+                          type="button"
+                          onClick={() => removeGuest(index)}
+                          className="text-khaki font-bold text-md font-Lora"
+                        >
+                          Remove
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      <div>
+                        <label className="block text-lightGray text-sm font-Lora mb-1">
+                          Name *
+                        </label>
+                        <input
+                          type="text"
+                          value={guest.name}
+                          onChange={(e) => updateGuest(index, "name", e.target.value)}
+                          placeholder="Full name"
+                          className="w-full h-[45px] border border-gray bg-lightBlack text-white font-Lora px-4 outline-none focus:ring-1 focus:ring-khaki focus:border-khaki placeholder:text-lightGray"
+                        />
+                        {fieldErrors[`guest_${index}_name`] && (
+                          <p className="mt-1 text-xs text-red-400 font-Lora">
+                            {fieldErrors[`guest_${index}_name`]}
+                          </p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label className="block text-lightGray text-sm font-Lora mb-1">
+                          Age *
+                        </label>
+                        <input
+                          type="number"
+                          min="1"
+                          value={guest.age}
+                          onChange={(e) => updateGuest(index, "age", e.target.value)}
+                          placeholder="Age"
+                          className="w-full h-[45px] border border-gray bg-lightBlack text-white font-Lora px-4 outline-none focus:ring-1 focus:ring-khaki focus:border-khaki placeholder:text-lightGray"
+                        />
+                        {fieldErrors[`guest_${index}_age`] && (
+                          <p className="mt-1 text-xs text-red-400 font-Lora">
+                            {fieldErrors[`guest_${index}_age`]}
+                          </p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label className="block text-lightGray text-sm font-Lora mb-1">
+                          Gender *
+                        </label>
+                        <select
+                          value={guest.gender}
+                          onChange={(e) => updateGuest(index, "gender", e.target.value)}
+                          className="w-full h-[45px] border border-gray bg-lightBlack text-white font-Lora px-4 outline-none focus:ring-1 focus:ring-khaki focus:border-khaki"
+                        >
+                          <option value="">Select</option>
+                          <option value="male">Male</option>
+                          <option value="female">Female</option>
+                          <option value="other">Other</option>
+                          <option value="prefer-not-to-say">Prefer not to say</option>
+                        </select>
+                        {fieldErrors[`guest_${index}_gender`] && (
+                          <p className="mt-1 text-xs text-red-400 font-Lora">
+                            {fieldErrors[`guest_${index}_gender`]}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                {/* <button
+                  type="button"
+                  onClick={addGuest}
+                  className="w-full py-2 border border-khaki text-khaki hover:bg-khaki hover:text-lightBlack font-Lora transition-colors duration-200 rounded"
+                >
+                  + Add Additional Guest (${ADDITIONAL_GUEST_CHARGE} per guest)
+                </button> */}
+
+                <button
+                  type="submit"
+                  onClick={addGuest}
+                  className="btn-primary1 disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{ minWidth: "325px", maxWidth: "375px", width: "100%" }}
+                >
+                  Add Additional Guest ( ${ADDITIONAL_GUEST_CHARGE} per guest )
+                </button>
+
+              </div>
+
+              {/* Price Breakdown */}
+              {packageId && (
+                <div className="bg-gray/20 p-4 rounded-lg border border-gray/50">
+                  <h3 className="text-white font-Lora font-medium mb-3">Price Breakdown</h3>
+                  <div className="space-y-2 text-lightGray font-Lora">
+                    <div className="flex justify-between">
+                      <span>Package Price:</span>
+                      <span className="text-white">
+                        ${packagePriceValue.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      </span>
+                    </div>
+                    {additionalGuestCount > 0 && (
+                      <div className="flex justify-between">
+                        <span>
+                          Additional Guests ({additionalGuestCount} × ${ADDITIONAL_GUEST_CHARGE}):
+                        </span>
+                        <span className="text-white">
+                          ${additionalCharges.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </span>
+                      </div>
+                    )}
+                    <div className="flex justify-between pt-2 border-t border-gray/50">
+                      <span className="text-white font-medium">Total:</span>
+                      <span className="text-khaki font-bold text-lg">
+                        ${totalPrice.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* D. Personalization & Special Requests */}
               <div>
                 <label htmlFor="additional-requests" className="block text-white font-Lora font-medium mb-2">
@@ -254,7 +497,15 @@ const Booking = () => {
                 <textarea
                   id="additional-requests"
                   value={additionalRequests}
-                  onChange={(e) => setAdditionalRequests(e.target.value)}
+                  onChange={(e) => {
+                    setAdditionalRequests(e.target.value);
+                    // Clear validation error when user starts typing
+                    if (fieldErrors.additionalRequests) {
+                      const updatedErrors = { ...fieldErrors };
+                      delete updatedErrors.additionalRequests;
+                      setFieldErrors(updatedErrors);
+                    }
+                  }}
                   placeholder={PERSONALIZATION_PLACEHOLDER}
                   rows={5}
                   className="w-full border border-gray bg-lightBlack text-white font-Lora px-4 py-3 outline-none focus:ring-1 focus:ring-khaki focus:border-khaki placeholder:text-lightGray resize-none"

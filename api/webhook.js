@@ -9,8 +9,8 @@ import { Resend } from "resend";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@royella.com";
-const FROM_EMAIL = process.env.FROM_EMAIL || "noreply@royella.com";
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "project.codersh@gmail.com";
+const FROM_EMAIL = process.env.FROM_EMAIL || "project.codersh@gmail.com";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -54,6 +54,11 @@ export default async function handler(req, res) {
 
       // Parse meal preferences from metadata
       const meals = JSON.parse(metadata.meals || "{}");
+      
+      // Parse guest information from metadata
+      const guests = JSON.parse(metadata.guests || "[]");
+      const additionalGuestCount = parseInt(metadata.additionalGuestCount || "0");
+      const additionalCharges = parseFloat(metadata.additionalCharges || "0");
 
       // Prepare booking details
       const bookingDetails = {
@@ -69,6 +74,9 @@ export default async function handler(req, res) {
           lunch: meals.lunch || {},
           dinner: meals.dinner || {},
         },
+        guests,
+        additionalGuestCount,
+        additionalCharges,
       };
 
       // Send confirmation email to customer
@@ -90,12 +98,13 @@ export default async function handler(req, res) {
 // Customer confirmation email
 async function sendCustomerConfirmationEmail(customerEmail, bookingDetails) {
   const mealDetails = formatMealDetails(bookingDetails.meals);
+  const guestDetails = formatGuestDetails(bookingDetails.guests, bookingDetails.additionalGuestCount, bookingDetails.additionalCharges);
 
   try {
     await resend.emails.send({
       from: FROM_EMAIL,
       to: customerEmail,
-      subject: "Booking Confirmed - Thank You for Choosing Royella!",
+      subject: "Booking Confirmed - Thank You for Choosing LuxeDR!",
       html: `
         <!DOCTYPE html>
         <html>
@@ -107,6 +116,9 @@ async function sendCustomerConfirmationEmail(customerEmail, bookingDetails) {
             .content { background-color: #f9f9f9; padding: 20px; }
             .details { background-color: white; padding: 15px; margin: 10px 0; border-left: 4px solid #7d4d00; }
             .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+            table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+            th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
+            th { background-color: #f2f2f2; }
           </style>
         </head>
         <body>
@@ -116,14 +128,18 @@ async function sendCustomerConfirmationEmail(customerEmail, bookingDetails) {
             </div>
             <div class="content">
               <p>Dear Valued Guest,</p>
-              <p>Thank you for your booking with Royella! We're excited to host you.</p>
+              <p>Thank you for your booking with LuxeDR! We're excited to host you.</p>
               
               <div class="details">
                 <h2>Booking Details</h2>
                 <p><strong>Package:</strong> ${bookingDetails.packageName}</p>
-                <p><strong>Price:</strong> ${bookingDetails.packagePrice} USD</p>
+                <p><strong>Base Price:</strong> ${bookingDetails.packagePrice} USD</p>
+                ${bookingDetails.additionalCharges > 0 ? `<p><strong>Additional Guest Charges:</strong> $${bookingDetails.additionalCharges.toFixed(2)} USD</p>` : ""}
+                <p><strong>Total Amount:</strong> ${bookingDetails.paymentAmount} USD</p>
                 <p><strong>Payment Status:</strong> ${bookingDetails.paymentStatus}</p>
               </div>
+
+              ${guestDetails}
 
               ${mealDetails}
 
@@ -143,7 +159,7 @@ async function sendCustomerConfirmationEmail(customerEmail, bookingDetails) {
               <p>If you have any questions, please don't hesitate to contact us.</p>
             </div>
             <div class="footer">
-              <p>Best regards,<br>The Royella Team</p>
+              <p>Best regards,<br>The LuxeDR Team</p>
             </div>
           </div>
         </body>
@@ -159,6 +175,7 @@ async function sendCustomerConfirmationEmail(customerEmail, bookingDetails) {
 // Admin notification email
 async function sendAdminNotificationEmail(adminEmail, bookingDetails) {
   const mealDetails = formatMealDetails(bookingDetails.meals);
+  const guestDetails = formatGuestDetails(bookingDetails.guests, bookingDetails.additionalGuestCount, bookingDetails.additionalCharges);
 
   try {
     await resend.emails.send({
@@ -191,10 +208,13 @@ async function sendAdminNotificationEmail(adminEmail, bookingDetails) {
                 <p><strong>Email:</strong> ${bookingDetails.customerEmail}</p>
                 <p><strong>Package:</strong> ${bookingDetails.packageName}</p>
                 <p><strong>Package ID:</strong> ${bookingDetails.packageId}</p>
-                <p><strong>Price:</strong> ${bookingDetails.packagePrice} USD</p>
-                <p><strong>Payment Amount:</strong> ${bookingDetails.paymentAmount}</p>
+                <p><strong>Base Price:</strong> ${bookingDetails.packagePrice} USD</p>
+                ${bookingDetails.additionalCharges > 0 ? `<p><strong>Additional Guest Charges:</strong> $${bookingDetails.additionalCharges.toFixed(2)} USD</p>` : ""}
+                <p><strong>Total Payment Amount:</strong> ${bookingDetails.paymentAmount}</p>
                 <p><strong>Payment Status:</strong> ${bookingDetails.paymentStatus}</p>
               </div>
+
+              ${guestDetails}
 
               ${mealDetails}
 
@@ -242,5 +262,34 @@ function formatMealDetails(meals) {
   });
 
   html += "</div>";
+  return html;
+}
+
+// Helper function to format guest details
+function formatGuestDetails(guests, additionalGuestCount, additionalCharges) {
+  if (!guests || guests.length === 0) {
+    return '<div class="details"><h3>Guest Information</h3><p>No guest information provided.</p></div>';
+  }
+
+  let html = '<div class="details"><h3>Guest Information</h3>';
+  html += `<p><strong>Total Guests:</strong> ${guests.length}</p>`;
+  
+  if (additionalGuestCount > 0) {
+    html += `<p><strong>Additional Guests:</strong> ${additionalGuestCount} ($${additionalCharges.toFixed(2)} charge)</p>`;
+  }
+
+  html += '<table><thead><tr><th>Guest #</th><th>Name</th><th>Age</th><th>Gender</th></tr></thead><tbody>';
+
+  guests.forEach((guest, index) => {
+    const isAdditional = index >= 4;
+    html += `<tr>`;
+    html += `<td>${index + 1}${isAdditional ? ' <em>(Additional)</em>' : ''}</td>`;
+    html += `<td>${guest.name || 'N/A'}</td>`;
+    html += `<td>${guest.age || 'N/A'}</td>`;
+    html += `<td>${guest.gender ? guest.gender.charAt(0).toUpperCase() + guest.gender.slice(1) : 'N/A'}</td>`;
+    html += `</tr>`;
+  });
+
+  html += '</tbody></table></div>';
   return html;
 }
