@@ -11,6 +11,8 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Admin email is intentionally fixed as requested
 const ADMIN_EMAIL = "project.codersh@gmail.com";
+// FROM must be a verified / allowed sender in Resend (cannot be arbitrary user email)
+const FROM_EMAIL = "LuxeDR <onboarding@resend.dev>";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -144,9 +146,8 @@ async function sendCustomerConfirmationEmail(customerEmail, bookingDetails) {
       ),
     );
 
-    await resend.emails.send({
-      // Use the customer's email as the from address as requested
-      from: `${primaryName || "Guest"} <${customerEmail}>`,
+    const result = await resend.emails.send({
+      from: FROM_EMAIL,
       to: customerEmail,
       reply_to: customerEmail,
       subject: "Thank you for your booking with LuxeDR",
@@ -205,6 +206,8 @@ async function sendCustomerConfirmationEmail(customerEmail, bookingDetails) {
         </html>
       `,
     });
+
+    console.log("Customer email sent via Resend:", result);
   } catch (error) {
     console.error("Error sending customer email via Resend:", {
       message: error?.message,
@@ -239,9 +242,9 @@ async function sendAdminNotificationEmail(adminEmail, bookingDetails) {
       ),
     );
 
-    await resend.emails.send({
+    const result = await resend.emails.send({
       // Admin email remains fixed and predefined
-      from: `LuxeDR Booking <${ADMIN_EMAIL}>`,
+      from: FROM_EMAIL,
       to: adminEmail,
       subject: `New Booking: ${bookingDetails.packageName}`,
       html: `
@@ -304,8 +307,16 @@ async function sendAdminNotificationEmail(adminEmail, bookingDetails) {
         </html>
       `,
     });
+
+    console.log("Admin email sent via Resend:", result);
   } catch (error) {
-    console.error("Error sending admin email:", error);
+    console.error("Error sending admin email via Resend:", {
+      message: error?.message,
+      name: error?.name,
+      statusCode: error?.statusCode,
+      stack: error?.stack,
+      raw: error,
+    });
     throw error;
   }
 }
