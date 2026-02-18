@@ -9,8 +9,8 @@ import { Resend } from "resend";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "project.codersh@gmail.com";
-const FROM_EMAIL = process.env.FROM_EMAIL || "project.codersh@gmail.com";
+// Admin email is intentionally fixed as requested
+const ADMIN_EMAIL = "project.codersh@gmail.com";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -77,7 +77,8 @@ export default async function handler(req, res) {
       );
 
       // Prepare booking details
-      const totalGuests = 1 + (additionalGuestCount > 0 ? additionalGuestCount : 0);
+      const totalGuests =
+        1 + (additionalGuestCount > 0 ? additionalGuestCount : 0);
 
       const bookingDetails = {
         packageName: metadata.packageName,
@@ -102,13 +103,20 @@ export default async function handler(req, res) {
         packageDurationNights,
       };
 
-      // Send confirmation email to customer
-      await sendCustomerConfirmationEmail(customerEmail, bookingDetails);
+      // Send confirmation email to customer (only if we have an email)
+      if (customerEmail) {
+        await sendCustomerConfirmationEmail(customerEmail, bookingDetails);
+      } else {
+        console.warn(
+          "Skipping customer confirmation email because no customer email was found for session:",
+          session.id,
+        );
+      }
 
       // Send booking details to admin
       await sendAdminNotificationEmail(ADMIN_EMAIL, bookingDetails);
 
-      console.log("Emails sent successfully for booking:", session.id);
+      console.log("Emails processed successfully for booking:", session.id);
     } catch (error) {
       console.error("Error processing webhook:", error);
       // Don't fail the webhook - log error but return 200
@@ -124,10 +132,24 @@ async function sendCustomerConfirmationEmail(customerEmail, bookingDetails) {
   const totalGuests = bookingDetails.totalGuests || 1;
 
   try {
+    console.log(
+      "Sending customer confirmation email via Resend",
+      JSON.stringify(
+        {
+          to: customerEmail,
+          hasApiKey: !!process.env.RESEND_API_KEY,
+        },
+        null,
+        2,
+      ),
+    );
+
     await resend.emails.send({
-      from: FROM_EMAIL,
+      // Use the customer's email as the from address as requested
+      from: `${primaryName || "Guest"} <${customerEmail}>`,
       to: customerEmail,
-      subject: "Thank you for your booking with Royella",
+      reply_to: customerEmail,
+      subject: "Thank you for your booking with LuxeDR",
       html: `
         <!DOCTYPE html>
         <html>
@@ -148,7 +170,7 @@ async function sendCustomerConfirmationEmail(customerEmail, bookingDetails) {
             </div>
             <div class="content">
               <p>Dear ${primaryName},</p>
-              <p>Thank you for your booking with Royella. We're delighted to host you.</p>
+              <p>Thank you for your booking with LuxeDR. We're delighted to host you.</p>
               
               <div class="details">
                 <h2>Your Booking Summary</h2>
@@ -176,7 +198,7 @@ async function sendCustomerConfirmationEmail(customerEmail, bookingDetails) {
               <p>If you need to update your booking or have any questions, simply reply to this email.</p>
             </div>
             <div class="footer">
-              <p>Warm regards,<br>The Royella Team</p>
+              <p>Warm regards,<br>The LuxeDR Team</p>
             </div>
           </div>
         </body>
@@ -184,7 +206,13 @@ async function sendCustomerConfirmationEmail(customerEmail, bookingDetails) {
       `,
     });
   } catch (error) {
-    console.error("Error sending customer email:", error);
+    console.error("Error sending customer email via Resend:", {
+      message: error?.message,
+      name: error?.name,
+      statusCode: error?.statusCode,
+      stack: error?.stack,
+      raw: error,
+    });
     throw error;
   }
 }
@@ -199,8 +227,21 @@ async function sendAdminNotificationEmail(adminEmail, bookingDetails) {
   );
 
   try {
+    console.log(
+      "Sending admin notification email via Resend",
+      JSON.stringify(
+        {
+          to: adminEmail,
+          hasApiKey: !!process.env.RESEND_API_KEY,
+        },
+        null,
+        2,
+      ),
+    );
+
     await resend.emails.send({
-      from: FROM_EMAIL,
+      // Admin email remains fixed and predefined
+      from: `LuxeDR Booking <${ADMIN_EMAIL}>`,
       to: adminEmail,
       subject: `New Booking: ${bookingDetails.packageName}`,
       html: `
