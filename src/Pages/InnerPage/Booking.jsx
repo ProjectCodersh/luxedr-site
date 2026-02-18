@@ -4,10 +4,10 @@ import BreadCrumb from "../../BreadCrumb/BreadCrumb";
 
 // Package options matching Packages page (used for dropdown and URL param pre-selection)
 export const PACKAGE_OPTIONS = [
-  { id: "essence-getaway", name: "The Essence Getaway", price: "$1,660" },
-  { id: "indulge-stay", name: "Indulge Stay", price: "$2,900" },
-  { id: "serenity-week", name: "Serenity Week", price: "$3,680" },
-  { id: "imperial-retreat", name: "Imperial Retreat", price: "$5,180" },
+  { id: "essence-getaway", name: "The Essence Getaway", price: "$1,660", durationDays: 3, durationNights: 2 },
+  { id: "indulge-stay", name: "Indulge Stay", price: "$2,900", durationDays: 5, durationNights: 4 },
+  { id: "serenity-week", name: "Serenity Week", price: "$3,680", durationDays: 5, durationNights: 4 },
+  { id: "imperial-retreat", name: "Imperial Retreat", price: "$5,180", durationDays: 5, durationNights: 4 },
 ];
 
 // solving the issue of api keys related errors 
@@ -17,6 +17,25 @@ const CUSTOM_MENU_PLACEHOLDER =
 
 const PERSONALIZATION_PLACEHOLDER =
   "Mention any celebration themes, surprise arrangements, romantic décor, adventure preferences, accessibility needs, or any other custom experience requests.";
+
+function addDaysToISODate(isoDate, daysToAdd) {
+  if (!isoDate || Number.isNaN(daysToAdd)) return "";
+  const parts = isoDate.split("-").map((v) => parseInt(v, 10));
+  if (parts.length !== 3 || parts.some((n) => Number.isNaN(n))) return "";
+
+  const [year, month, day] = parts;
+  const dt = new Date(Date.UTC(year, month - 1, day));
+  dt.setUTCDate(dt.getUTCDate() + daysToAdd);
+  return dt.toISOString().slice(0, 10);
+}
+
+function getTodayISODateLocal() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, "0");
+  const d = String(now.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
 
 const Booking = () => {
   const [searchParams] = useSearchParams();
@@ -52,6 +71,11 @@ const Booking = () => {
 
   const MAX_ADDITIONAL_PEOPLE = 4;
   const ADDITIONAL_GUEST_CHARGE = 60; // $60 per additional person
+
+  // Dates
+  const [arrivalDate, setArrivalDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const todayISO = getTodayISODateLocal();
   // CHECKING CHANGESS
   // Load menu from same JSON as ServiceDetails (breakfast, lunch, dinner)
   useEffect(() => {
@@ -81,6 +105,29 @@ const Booking = () => {
     : 0;
   const totalPrice = packagePriceValue + additionalCharges;
 
+  const selectedPackage = PACKAGE_OPTIONS.find((p) => p.id === packageId) || null;
+  const packageDurationDays = selectedPackage?.durationDays || 0;
+  const packageDurationNights = selectedPackage?.durationNights || 0;
+
+  // Auto-calculate end date based on package duration (departure = arrival + nights)
+  useEffect(() => {
+    if (!arrivalDate || !packageDurationDays) {
+      setEndDate("");
+      return;
+    }
+
+    const daysToAdd = Math.max(packageDurationDays - 1, 0);
+    setEndDate(addDaysToISODate(arrivalDate, daysToAdd));
+  }, [arrivalDate, packageDurationDays]);
+
+  // Prevent past dates (in case of autofill / manual edits)
+  useEffect(() => {
+    if (arrivalDate && arrivalDate < todayISO) {
+      setArrivalDate("");
+      setEndDate("");
+    }
+  }, [arrivalDate, todayISO]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -104,6 +151,13 @@ const Booking = () => {
     }
     if (!additionalRequests.trim()) {
       newErrors.additionalRequests = "Please add your personalization notes.";
+    }
+
+    if (!arrivalDate) {
+      newErrors.arrivalDate = "Please select your arrival date.";
+    }
+    if (arrivalDate && packageDurationDays && !endDate) {
+      newErrors.endDate = "End date could not be calculated. Please reselect your arrival date.";
     }
 
     // Validate primary guest information
@@ -136,6 +190,10 @@ const Booking = () => {
         packageId,
         packageName: PACKAGE_OPTIONS.find((p) => p.id === packageId)?.name || "",
         packagePrice: PACKAGE_OPTIONS.find((p) => p.id === packageId)?.price || "",
+        arrivalDate,
+        endDate,
+        packageDurationDays,
+        packageDurationNights,
         meals: {
           breakfast: {
             menu: breakfastMenu,
@@ -240,6 +298,49 @@ const Booking = () => {
                 {fieldErrors.package && (
                   <p className="mt-1 text-sm text-red-400 font-Lora">{fieldErrors.package}</p>
                 )}
+                {selectedPackage?.durationDays ? (
+                  <p className="mt-2 text-xs text-lightGray font-Lora">
+                    Duration: {selectedPackage.durationDays} day{selectedPackage.durationDays !== 1 ? "s" : ""} &{" "}
+                    {selectedPackage.durationNights} night{selectedPackage.durationNights !== 1 ? "s" : ""}
+                  </p>
+                ) : null}
+              </div>
+
+              {/* A2. Arrival Date + Auto End Date */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="arrival-date" className="block text-white font-Lora font-medium mb-2">
+                    Arrival Date
+                  </label>
+                  <input
+                    id="arrival-date"
+                    type="date"
+                    min={todayISO}
+                    value={arrivalDate}
+                    onChange={(e) => setArrivalDate(e.target.value)}
+                    className="w-full h-[50px] border border-gray bg-lightBlack text-white font-Lora px-4 outline-none focus:ring-1 focus:ring-khaki focus:border-khaki"
+                  />
+                  {fieldErrors.arrivalDate && (
+                    <p className="mt-1 text-sm text-red-400 font-Lora">{fieldErrors.arrivalDate}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label htmlFor="end-date" className="block text-white font-Lora font-medium mb-2">
+                    End Date (Auto)
+                  </label>
+                  <input
+                    id="end-date"
+                    type="date"
+                    value={endDate}
+                    readOnly
+                    disabled
+                    className="w-full h-[50px] border border-gray bg-lightBlack text-white font-Lora px-4 outline-none opacity-70 cursor-not-allowed"
+                  />
+                  {fieldErrors.endDate && (
+                    <p className="mt-1 text-sm text-red-400 font-Lora">{fieldErrors.endDate}</p>
+                  )}
+                </div>
               </div>
 
               {/* B & C. Meal Preferences + Custom Menu (from food.menu.json, same as ServiceDetails) */}

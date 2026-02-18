@@ -57,8 +57,21 @@ export default async function handler(req, res) {
 
       // Parse primary guest + additional people from metadata
       const mainGuest = JSON.parse(metadata.mainGuest || "{}");
-      const additionalGuestCount = parseInt(metadata.additionalGuestCount || "0", 10);
+      const additionalGuestCount = parseInt(
+        metadata.additionalGuestCount || "0",
+        10,
+      );
       const additionalCharges = parseFloat(metadata.additionalCharges || "0");
+      const arrivalDate = metadata.arrivalDate || "";
+      const endDate = metadata.endDate || "";
+      const packageDurationDays = parseInt(
+        metadata.packageDurationDays || "0",
+        10,
+      );
+      const packageDurationNights = parseInt(
+        metadata.packageDurationNights || "0",
+        10,
+      );
 
       // Prepare booking details
       const bookingDetails = {
@@ -77,6 +90,10 @@ export default async function handler(req, res) {
         mainGuest,
         additionalGuestCount,
         additionalCharges,
+        arrivalDate,
+        endDate,
+        packageDurationDays,
+        packageDurationNights,
       };
 
       // Send confirmation email to customer
@@ -101,7 +118,7 @@ async function sendCustomerConfirmationEmail(customerEmail, bookingDetails) {
   const guestDetails = formatPrimaryGuestDetails(
     bookingDetails.mainGuest,
     bookingDetails.additionalGuestCount,
-    bookingDetails.additionalCharges
+    bookingDetails.additionalCharges,
   );
 
   try {
@@ -138,6 +155,13 @@ async function sendCustomerConfirmationEmail(customerEmail, bookingDetails) {
                 <h2>Booking Details</h2>
                 <p><strong>Package:</strong> ${bookingDetails.packageName}</p>
                 <p><strong>Base Price:</strong> ${bookingDetails.packagePrice} USD</p>
+                ${bookingDetails.arrivalDate ? `<p><strong>Arrival Date:</strong> ${bookingDetails.arrivalDate}</p>` : ""}
+                ${bookingDetails.endDate ? `<p><strong>End Date:</strong> ${bookingDetails.endDate}</p>` : ""}
+                ${
+                  bookingDetails.packageDurationDays
+                    ? `<p><strong>Duration:</strong> ${bookingDetails.packageDurationDays} day${bookingDetails.packageDurationDays !== 1 ? "s" : ""} & ${bookingDetails.packageDurationNights} night${bookingDetails.packageDurationNights !== 1 ? "s" : ""}</p>`
+                    : ""
+                }
                 ${bookingDetails.additionalCharges > 0 ? `<p><strong>Additional Guest Charges:</strong> $${bookingDetails.additionalCharges.toFixed(2)} USD</p>` : ""}
                 <p><strong>Total Amount:</strong> ${bookingDetails.paymentAmount} USD</p>
                 <p><strong>Payment Status:</strong> ${bookingDetails.paymentStatus}</p>
@@ -182,7 +206,7 @@ async function sendAdminNotificationEmail(adminEmail, bookingDetails) {
   const guestDetails = formatPrimaryGuestDetails(
     bookingDetails.mainGuest,
     bookingDetails.additionalGuestCount,
-    bookingDetails.additionalCharges
+    bookingDetails.additionalCharges,
   );
 
   try {
@@ -217,6 +241,13 @@ async function sendAdminNotificationEmail(adminEmail, bookingDetails) {
                 <p><strong>Package:</strong> ${bookingDetails.packageName}</p>
                 <p><strong>Package ID:</strong> ${bookingDetails.packageId}</p>
                 <p><strong>Base Price:</strong> ${bookingDetails.packagePrice} USD</p>
+                ${bookingDetails.arrivalDate ? `<p><strong>Arrival Date:</strong> ${bookingDetails.arrivalDate}</p>` : ""}
+                ${bookingDetails.endDate ? `<p><strong>End Date:</strong> ${bookingDetails.endDate}</p>` : ""}
+                ${
+                  bookingDetails.packageDurationDays
+                    ? `<p><strong>Duration:</strong> ${bookingDetails.packageDurationDays} day${bookingDetails.packageDurationDays !== 1 ? "s" : ""} & ${bookingDetails.packageDurationNights} night${bookingDetails.packageDurationNights !== 1 ? "s" : ""}</p>`
+                    : ""
+                }
                 ${bookingDetails.additionalCharges > 0 ? `<p><strong>Additional Guest Charges:</strong> $${bookingDetails.additionalCharges.toFixed(2)} USD</p>` : ""}
                 <p><strong>Total Payment Amount:</strong> ${bookingDetails.paymentAmount}</p>
                 <p><strong>Payment Status:</strong> ${bookingDetails.paymentStatus}</p>
@@ -274,7 +305,11 @@ function formatMealDetails(meals) {
 }
 
 // Helper function to format primary guest + additional people details
-function formatPrimaryGuestDetails(mainGuest, additionalGuestCount, additionalCharges) {
+function formatPrimaryGuestDetails(
+  mainGuest,
+  additionalGuestCount,
+  additionalCharges,
+) {
   let html = '<div class="details"><h3>Guest Information</h3>';
 
   if (mainGuest) {
@@ -296,7 +331,7 @@ function formatPrimaryGuestDetails(mainGuest, additionalGuestCount, additionalCh
 
   if (additionalGuestCount > 0 && additionalCharges > 0) {
     html += `<p><strong>Additional Guest Charges:</strong> $${additionalCharges.toFixed(
-      2
+      2,
     )}</p>`;
   }
 
