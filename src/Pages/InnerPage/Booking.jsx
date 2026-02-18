@@ -82,33 +82,16 @@ const Booking = () => {
     const updatedGuests = [...guests];
     updatedGuests[index] = { ...updatedGuests[index], [field]: value };
     setGuests(updatedGuests);
-
-    // Clear validation error for this specific field when user starts typing
-    if (fieldErrors[`guest_${index}_${field}`]) {
-      const updatedErrors = { ...fieldErrors };
-      delete updatedErrors[`guest_${index}_${field}`];
-      setFieldErrors(updatedErrors);
-    }
   };
 
   // Add a new guest
   const addGuest = () => {
-    // Clear any existing validation errors when adding a guest
-    setFieldErrors({});
-    setError("");
     setGuests([...guests, { name: "", age: "", gender: "" }]);
   };
 
   // Remove a guest (only if beyond the first 4)
   const removeGuest = (index) => {
     if (index >= 4 && guests.length > 4) {
-      // Clear validation errors for the removed guest
-      const updatedErrors = { ...fieldErrors };
-      delete updatedErrors[`guest_${index}_name`];
-      delete updatedErrors[`guest_${index}_age`];
-      delete updatedErrors[`guest_${index}_gender`];
-      setFieldErrors(updatedErrors);
-
       const updatedGuests = guests.filter((_, i) => i !== index);
       setGuests(updatedGuests);
     }
@@ -255,15 +238,7 @@ const Booking = () => {
                 <select
                   id="package"
                   value={packageId}
-                  onChange={(e) => {
-                    setPackageId(e.target.value);
-                    // Clear package validation error when user selects a package
-                    if (fieldErrors.package) {
-                      const updatedErrors = { ...fieldErrors };
-                      delete updatedErrors.package;
-                      setFieldErrors(updatedErrors);
-                    }
-                  }}
+                  onChange={(e) => setPackageId(e.target.value)}
                   className="w-full h-[50px] border border-gray bg-lightBlack text-white font-Lora px-4 outline-none focus:ring-1 focus:ring-khaki focus:border-khaki"
                   required
                 >
@@ -291,15 +266,7 @@ const Booking = () => {
                   </label>
                   <select
                     value={value}
-                    onChange={(e) => {
-                      setValue(e.target.value);
-                      // Clear validation error when user selects a menu
-                      if (fieldErrors[`${key}Menu`]) {
-                        const updatedErrors = { ...fieldErrors };
-                        delete updatedErrors[`${key}Menu`];
-                        setFieldErrors(updatedErrors);
-                      }
-                    }}
+                    onChange={(e) => setValue(e.target.value)}
                     disabled={customChecked}
                     aria-disabled={customChecked}
                     className={`w-full h-[50px] border border-gray bg-lightBlack text-white font-Lora px-4 outline-none focus:ring-1 focus:ring-khaki focus:border-khaki ${customChecked ? "opacity-50 cursor-not-allowed" : ""}`}
@@ -448,14 +415,13 @@ const Booking = () => {
                 </button> */}
 
                 <button
-                  type="submit"
+                  type="button"
                   onClick={addGuest}
                   className="btn-primary1 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{ minWidth: "325px", maxWidth: "375px", width: "100%" }}
                 >
                   Add Additional Guest ( ${ADDITIONAL_GUEST_CHARGE} per guest )
                 </button>
-
               </div>
 
               {/* Price Breakdown */}
@@ -497,15 +463,7 @@ const Booking = () => {
                 <textarea
                   id="additional-requests"
                   value={additionalRequests}
-                  onChange={(e) => {
-                    setAdditionalRequests(e.target.value);
-                    // Clear validation error when user starts typing
-                    if (fieldErrors.additionalRequests) {
-                      const updatedErrors = { ...fieldErrors };
-                      delete updatedErrors.additionalRequests;
-                      setFieldErrors(updatedErrors);
-                    }
-                  }}
+                  onChange={(e) => setAdditionalRequests(e.target.value)}
                   placeholder={PERSONALIZATION_PLACEHOLDER}
                   rows={5}
                   className="w-full border border-gray bg-lightBlack text-white font-Lora px-4 py-3 outline-none focus:ring-1 focus:ring-khaki focus:border-khaki placeholder:text-lightGray resize-none"
