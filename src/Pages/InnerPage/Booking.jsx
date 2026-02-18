@@ -133,26 +133,43 @@ const Booking = () => {
     setIsLoading(true);
     setError("");
     setFieldErrors({});
-
-    // Validate required fields (package, all three meals, personalization notes)
     const newErrors = {};
+
+    // --- A. Package selection ---
 
     if (!packageId) {
       newErrors.package = "Please select a package.";
     }
-    if (!breakfastMenu) {
-      newErrors.breakfastMenu = "Please select a breakfast menu.";
+
+    // --- B. Meal preferences & custom menus ---
+    // For each meal: either a default menu OR custom notes are required.
+    if (!customBreakfast && !breakfastMenu) {
+      newErrors.breakfastMenu = "Please select a breakfast menu or choose a custom menu.";
     }
-    if (!lunchMenu) {
-      newErrors.lunchMenu = "Please select a lunch menu.";
+    if (customBreakfast && !customBreakfastNotes.trim()) {
+      newErrors.breakfastMenu = "Please describe your custom breakfast preferences.";
     }
-    if (!dinnerMenu) {
-      newErrors.dinnerMenu = "Please select a dinner menu.";
+
+    if (!customLunch && !lunchMenu) {
+      newErrors.lunchMenu = "Please select a lunch menu or choose a custom menu.";
     }
+    if (customLunch && !customLunchNotes.trim()) {
+      newErrors.lunchMenu = "Please describe your custom lunch preferences.";
+    }
+
+    if (!customDinner && !dinnerMenu) {
+      newErrors.dinnerMenu = "Please select a dinner menu or choose a custom menu.";
+    }
+    if (customDinner && !customDinnerNotes.trim()) {
+      newErrors.dinnerMenu = "Please describe your custom dinner preferences.";
+    }
+
+    // --- C. Personalization notes ---
     if (!additionalRequests.trim()) {
       newErrors.additionalRequests = "Please add your personalization notes.";
     }
 
+    // --- D. Dates ---
     if (!arrivalDate) {
       newErrors.arrivalDate = "Please select your arrival date.";
     }
@@ -160,21 +177,36 @@ const Booking = () => {
       newErrors.endDate = "End date could not be calculated. Please reselect your arrival date.";
     }
 
-    // Validate primary guest information
+    // --- E. Primary guest information ---
     if (!mainGuest.name.trim()) {
       newErrors.mainGuestName = "Please enter your full name.";
     }
-    if (!mainGuest.age || parseInt(mainGuest.age, 10) <= 0) {
-      newErrors.mainGuestAge = "Please enter a valid age.";
+    const ageNumber = parseInt(mainGuest.age, 10);
+    const MIN_AGE = 18;
+    const MAX_AGE = 100;
+    if (!mainGuest.age || Number.isNaN(ageNumber)) {
+      newErrors.mainGuestAge = "Please enter your age.";
+    } else if (ageNumber < MIN_AGE || ageNumber > MAX_AGE) {
+      newErrors.mainGuestAge = `Age must be between ${MIN_AGE} and ${MAX_AGE} years.`;
     }
     if (!mainGuest.gender) {
       newErrors.mainGuestGender = "Please select your gender.";
     }
     if (!mainGuest.email.trim()) {
       newErrors.mainGuestEmail = "Please enter your email address.";
+    } else {
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(mainGuest.email.trim())) {
+        newErrors.mainGuestEmail = "Please enter a valid email address.";
+      }
     }
     if (!mainGuest.phone.trim()) {
       newErrors.mainGuestPhone = "Please enter your phone number.";
+    } else {
+      const digitsOnly = mainGuest.phone.replace(/\D/g, "");
+      if (digitsOnly.length < 7 || digitsOnly.length > 15) {
+        newErrors.mainGuestPhone = "Please enter a valid contact number (7–15 digits).";
+      }
     }
 
     if (Object.keys(newErrors).length > 0) {
