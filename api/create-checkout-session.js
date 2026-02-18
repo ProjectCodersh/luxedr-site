@@ -23,11 +23,11 @@ function getStripeClient() {
 
 // Get base URL
 function getBaseUrl() {
+  if (process.env.BASE_URL) {
+    return process.env.BASE_URL.replace(/\/$/, "");
+  }
   if (process.env.VERCEL_URL) {
     return `https://${process.env.VERCEL_URL}`;
-  }
-  if (process.env.BASE_URL) {
-    return process.env.BASE_URL;
   }
   return "http://localhost:5173";
 }
