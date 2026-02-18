@@ -19,5 +19,3 @@ const Packages = () => {
 };
 
 export default Packages;
-
-// packages are almost working fine 
