@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import BreadCrumb from "../../BreadCrumb/BreadCrumb";
+import HelmetChanger from "../../Shared/Helmet/Helmet";
 
 // Package options matching Packages page (used for dropdown and URL param pre-selection)
 export const PACKAGE_OPTIONS = [
@@ -286,6 +287,7 @@ const Booking = () => {
 
   return (
     <>
+      <HelmetChanger title="Book Your Stay | LUXEDR Luxury Resort Experience" description="Reserve your LUXEDR experience with custom menus, luxury accommodations, and full concierge service in the Dominican Republic." />
       <BreadCrumb title="Booking" home="" />
       <section className="bg-whiteSmoke dark:bg-normalBlack py-20 2xl:py-[120px]">
         <div className="Container">

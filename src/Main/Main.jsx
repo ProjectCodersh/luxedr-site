@@ -17,7 +17,11 @@ const Main = () => {
 
   return (
     <>
-      <HelmetChanger title="Hotel Booking" />
+      <HelmetChanger
+        title="LUXEDR Resort | Luxury Stay & Gourmet Experience"
+        description="Experience luxury stays, private chef dining, and personalized concierge services at LuxDR Resort in the Dominican Republic."
+      />
+
       <ScrollToTop />
       <GoToTop />
       <Navbar />

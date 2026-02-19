@@ -1,11 +1,20 @@
 import { Helmet } from "react-helmet-async";
+import PropTypes from "prop-types";
 
-const HelmetChanger = ({ title }) => {
+const HelmetChanger = ({ title, description }) => {
   return (
     <Helmet>
-      <title>LuxeDR - {title}</title>
+      <title>{title}</title>
+      {description && (
+        <meta name="description" content={description} />
+      )}
     </Helmet>
   );
+};
+
+HelmetChanger.propTypes = {
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string,
 };
 
 export default HelmetChanger;

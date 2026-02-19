@@ -2,6 +2,7 @@ import { MdEmail, MdOutlineShareLocation } from "react-icons/md";
 import BreadCrumb from "../../BreadCrumb/BreadCrumb";
 import { IoIosCall } from "react-icons/io";
 import { Link } from "react-router-dom";
+import HelmetChanger from "../../Shared/Helmet/Helmet";
 // import { useState } from 'react';
 
 
@@ -19,6 +20,7 @@ const Contact = () => {
 
   return (
     <div>
+      <HelmetChanger title="Contact LUXEDR | Luxury Resort Dominican Republic" description="Get in touch with LUXEDR for bookings, custom menus, and concierge services. Contact our team for your luxury stay in the Dominican Republic." />
       <BreadCrumb title="Contact " />
 
       {/* Contact */}
