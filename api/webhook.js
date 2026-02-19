@@ -2,6 +2,7 @@
 // Handles Stripe webhook events (payment success, etc.)
 // Sends confirmation email to customer and booking details to admin
 // Works with Vercel Serverless Functions
+/* eslint-env node */
 
 import Stripe from "stripe";
 import { Resend } from "resend";
@@ -9,10 +10,36 @@ import { Resend } from "resend";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Admin email is intentionally fixed as requested
-const ADMIN_EMAIL = "project.codersh@gmail.com";
-// FROM must be a verified / allowed sender in Resend (cannot be arbitrary user email)
+// Resend Sandbox: only the account login email can receive. Use that for both emails until you add a domain.
+const AUTHORIZED_SANDBOX_EMAIL = "devloper.codersh@gmail.com";
 const FROM_EMAIL = "onboarding@resend.dev";
+
+// CRITICAL: Disable body parsing so we get raw body for Stripe signature verification
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
+function getRawBody(readable) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    readable.on("data", (chunk) => chunks.push(chunk));
+    readable.on("end", () => resolve(Buffer.concat(chunks)));
+    readable.on("error", reject);
+  });
+}
+
+function safeParseJson(value, label, fallback) {
+  if (value == null || value === "") return fallback;
+  try {
+    const parsed = JSON.parse(value);
+    return typeof parsed === "object" && parsed !== null ? parsed : fallback;
+  } catch {
+    console.warn("Webhook: invalid JSON for", label, value?.slice?.(0, 80));
+    return fallback;
+  }
+}
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -22,19 +49,22 @@ export default async function handler(req, res) {
   const sig = req.headers["stripe-signature"];
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
-  // Get raw body for webhook signature verification
-  // In Vercel, req.body might be a buffer or string
-  const body =
-    typeof req.body === "string"
-      ? req.body
-      : Buffer.isBuffer(req.body)
-        ? req.body.toString()
-        : JSON.stringify(req.body);
+  if (!sig || !webhookSecret) {
+    console.error("Webhook missing stripe-signature or STRIPE_WEBHOOK_SECRET");
+    return res.status(400).json({ error: "Webhook configuration error" });
+  }
+
+  let rawBody;
+  try {
+    rawBody = await getRawBody(req);
+  } catch (err) {
+    console.error("Failed to read raw body:", err.message);
+    return res.status(400).json({ error: "Invalid request body" });
+  }
 
   let event;
-
   try {
-    event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
+    event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
   } catch (err) {
     console.error("Webhook signature verification failed:", err.message);
     return res.status(400).json({ error: `Webhook Error: ${err.message}` });
@@ -45,23 +75,20 @@ export default async function handler(req, res) {
     const session = event.data.object;
 
     try {
-      // Retrieve the full session with metadata
       const fullSession = await stripe.checkout.sessions.retrieve(session.id, {
         expand: ["customer", "payment_intent"],
       });
 
-      const metadata = fullSession.metadata;
+      const metadata = fullSession.metadata || {};
+      const mainGuest = safeParseJson(metadata.mainGuest, "mainGuest", {});
+      const meals = safeParseJson(metadata.meals, "meals", {});
 
-      // Parse primary guest + additional people from metadata
-      const mainGuest = JSON.parse(metadata.mainGuest || "{}");
       const formEmail =
         (typeof mainGuest.email === "string" && mainGuest.email.trim()) || "";
       const stripeEmail =
         fullSession.customer_details?.email || fullSession.customer_email || "";
       const customerEmail = formEmail || stripeEmail;
 
-      // Parse meal preferences from metadata
-      const meals = JSON.parse(metadata.meals || "{}");
       const additionalGuestCount = parseInt(
         metadata.additionalGuestCount || "0",
         10,
@@ -78,7 +105,6 @@ export default async function handler(req, res) {
         10,
       );
 
-      // Prepare booking details
       const totalGuests =
         1 + (additionalGuestCount > 0 ? additionalGuestCount : 0);
 
@@ -105,51 +131,43 @@ export default async function handler(req, res) {
         packageDurationNights,
       };
 
-      // Send confirmation email to customer (only if we have an email)
-      if (customerEmail) {
-        await sendCustomerConfirmationEmail(customerEmail, bookingDetails);
-      } else {
-        console.warn(
-          "Skipping customer confirmation email because no customer email was found for session:",
-          session.id,
-        );
-      }
+      // Sandbox: send both emails to AUTHORIZED_SANDBOX_EMAIL so they are delivered
+      // 1. Admin email (full booking details)
+      await sendAdminNotificationEmail(AUTHORIZED_SANDBOX_EMAIL, bookingDetails);
+      // 2. User confirmation email (formal greeting + summary) — in sandbox same recipient
+      await sendCustomerConfirmationEmail(
+        AUTHORIZED_SANDBOX_EMAIL,
+        bookingDetails,
+      );
 
-      // Send booking details to admin
-      await sendAdminNotificationEmail(ADMIN_EMAIL, bookingDetails);
-
-      console.log("Emails processed successfully for booking:", session.id);
+      console.log(
+        "Sandbox emails sent to",
+        AUTHORIZED_SANDBOX_EMAIL,
+        "for booking:",
+        session.id,
+      );
     } catch (error) {
       console.error("Error processing webhook:", error);
-      // Don't fail the webhook - log error but return 200
+      // Return 200 so Stripe does not retry; errors are logged
     }
   }
 
   res.status(200).json({ received: true });
 }
 
-// Customer confirmation email (simple thank-you with key details)
-async function sendCustomerConfirmationEmail(customerEmail, bookingDetails) {
+// Customer confirmation email (formal greeting + booking summary)
+async function sendCustomerConfirmationEmail(toEmail, bookingDetails) {
   const primaryName = bookingDetails.mainGuest?.name || "Guest";
   const totalGuests = bookingDetails.totalGuests || 1;
 
   try {
-    console.log(
-      "Sending customer confirmation email via Resend",
-      JSON.stringify(
-        {
-          to: customerEmail,
-          hasApiKey: !!process.env.RESEND_API_KEY,
-        },
-        null,
-        2,
-      ),
-    );
-
+    if (!process.env.RESEND_API_KEY) {
+      console.error("RESEND_API_KEY is not set");
+      return;
+    }
     const result = await resend.emails.send({
       from: FROM_EMAIL,
-      to: customerEmail,
-      reply_to: customerEmail,
+      to: toEmail,
       subject: "Thank you for your booking with LuxeDR",
       html: `
         <!DOCTYPE html>
@@ -207,21 +225,17 @@ async function sendCustomerConfirmationEmail(customerEmail, bookingDetails) {
       `,
     });
 
-    console.log("Customer email sent via Resend:", result);
+    console.log("Customer confirmation email sent:", result?.id || result);
   } catch (error) {
     console.error("Error sending customer email via Resend:", {
       message: error?.message,
-      name: error?.name,
       statusCode: error?.statusCode,
-      stack: error?.stack,
-      raw: error,
     });
-    throw error;
   }
 }
 
-// Admin notification email
-async function sendAdminNotificationEmail(adminEmail, bookingDetails) {
+// Admin notification email (full booking details)
+async function sendAdminNotificationEmail(toEmail, bookingDetails) {
   const mealDetails = formatMealDetails(bookingDetails.meals);
   const guestDetails = formatPrimaryGuestDetails(
     bookingDetails.mainGuest,
@@ -230,23 +244,14 @@ async function sendAdminNotificationEmail(adminEmail, bookingDetails) {
   );
 
   try {
-    console.log(
-      "Sending admin notification email via Resend",
-      JSON.stringify(
-        {
-          to: adminEmail,
-          hasApiKey: !!process.env.RESEND_API_KEY,
-        },
-        null,
-        2,
-      ),
-    );
-
+    if (!process.env.RESEND_API_KEY) {
+      console.error("RESEND_API_KEY is not set");
+      return;
+    }
     const result = await resend.emails.send({
-      // Admin email remains fixed and predefined
       from: FROM_EMAIL,
-      to: adminEmail,
-      subject: `New Booking: ${bookingDetails.packageName}`,
+      to: toEmail,
+      subject: `ADMIN: New Booking - ${bookingDetails.packageName}`,
       html: `
         <!DOCTYPE html>
         <html>
@@ -308,16 +313,12 @@ async function sendAdminNotificationEmail(adminEmail, bookingDetails) {
       `,
     });
 
-    console.log("Admin email sent via Resend:", result);
+    console.log("Admin notification email sent:", result?.id || result);
   } catch (error) {
     console.error("Error sending admin email via Resend:", {
       message: error?.message,
-      name: error?.name,
       statusCode: error?.statusCode,
-      stack: error?.stack,
-      raw: error,
     });
-    throw error;
   }
 }
 
